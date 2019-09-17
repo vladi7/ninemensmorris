@@ -4,7 +4,7 @@ public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
-	private boolean allPiecesOnBoard;
+	public boolean allPiecesOnBoard;
 	private int numBlackPieces = 9;
 	private int numWhitePieces = 9;
 
@@ -50,7 +50,7 @@ public class Board {
 		currentTurn = Dot.WHITE;
 	}
 
-	public void makeMove(int rowSelected, int colSelected) {
+	public void makeMoveFirstPhase(int rowSelected, int colSelected) {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = currentTurn; // Place token
@@ -59,6 +59,9 @@ public class Board {
 			}
 			if (currentTurn == Dot.BLACK && !allPiecesOnBoard) {
 				numBlackPieces -= 1;
+			}
+			if (numWhitePieces == 0 && numBlackPieces == 0) {
+				allPiecesOnBoard = true;
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE; // change turn
 		}
