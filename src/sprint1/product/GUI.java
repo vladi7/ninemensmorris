@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import sprint1.product.Board;
+import sprint1.product.Board.Dot;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -75,9 +76,12 @@ public class GUI extends JFrame {
 			g.drawLine(500, 400, 700, 400);
 			
 			g.setColor(Color.LIGHT_GRAY);
-			for (int row = 1; row < board.getTotalRows() + 1; ++row) {
-				for (int col = 1; col < board.getTotalColumns() +1 ; ++col) {
-					g.fillOval(CELL_SIZE * row - GRID_WIDHT_HALF,CELL_SIZE * col - GRID_WIDHT_HALF,10,10);
+			for (int row = 0; row < board.getTotalRows(); ++row) {
+				for (int col = 0; col < board.getTotalColumns() ; ++col) {
+					if(board.getDot(row, col) ==Dot.EMPTY) {
+					g.fillOval(CELL_SIZE * (row+1) - GRID_WIDHT_HALF,CELL_SIZE * (col+1) - GRID_WIDHT_HALF,10,10);
+					System.out.println(board.getDot(row, col));
+					}
 				}
 			}
 

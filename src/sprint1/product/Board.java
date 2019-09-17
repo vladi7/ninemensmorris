@@ -1,13 +1,13 @@
 package sprint1.product;
 
-
 public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
 	private boolean allPiecesOnBoard;
-	private int numBlackPieces=9;
-	private int numWhitePieces=9;
+	private int numBlackPieces = 9;
+	private int numWhitePieces = 9;
+
 	public enum Dot {
 		EMPTY, WHITE, BLACK, NOTUSED
 	}
@@ -46,21 +46,19 @@ public class Board {
 
 			}
 		}
-		currentGameState = GameState.PLAYING; 
-		currentTurn = Dot.WHITE;   
+		currentGameState = GameState.PLAYING;
+		currentTurn = Dot.WHITE;
 	}
 
 	public void makeMove(int rowSelected, int colSelected) {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = currentTurn; // Place token
-			if(currentTurn == Dot.WHITE && !allPiecesOnBoard)
-			{
-				numWhitePieces-=1;
+			if (currentTurn == Dot.WHITE && !allPiecesOnBoard) {
+				numWhitePieces -= 1;
 			}
-			if(currentTurn == Dot.BLACK && !allPiecesOnBoard)
-			{
-				numBlackPieces-=1;
+			if (currentTurn == Dot.BLACK && !allPiecesOnBoard) {
+				numBlackPieces -= 1;
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE; // change turn
 		}
@@ -98,9 +96,10 @@ public class Board {
 		}
 		return true;
 	}
-	public GameState getGameState(){
-		   return currentGameState;
-	   }
+
+	public GameState getGameState() {
+		return currentGameState;
+	}
 
 	public int getTotalRows() {
 		return TOTALROWS;
@@ -110,8 +109,10 @@ public class Board {
 		return TOTALCOLUMNS;
 	}
 
-	public Dot getCell(int rowSelected, int colSelected) {
+	public Dot getDot(int rowSelected, int colSelected) {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS) {
+			return grid[rowSelected][colSelected];
+		} else if (grid[rowSelected][colSelected] == Dot.NOTUSED) {
 			return grid[rowSelected][colSelected];
 		} else {
 			return null;
