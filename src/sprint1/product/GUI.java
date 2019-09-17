@@ -1,11 +1,14 @@
 package sprint1.product;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
 import sprint1.product.Board;
 import sprint1.product.Board.Dot;
+import sprint1.product.Board.GameState;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -31,7 +34,7 @@ public class GUI extends JFrame {
 		setContentPane();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack(); 
-		setTitle("Nine Mens Morris");
+		setTitle("Nine Men's Morris");
 		setVisible(true);  
 	}
 	
@@ -53,6 +56,20 @@ public class GUI extends JFrame {
 	class GameBoardCanvas extends JPanel {
 		
 		GameBoardCanvas(){
+			addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {  
+					if (board.getGameState() == GameState.PLAYING) {
+						int rowSelected = (e.getY() / CELL_SIZE);
+						int colSelected = (e.getX() / CELL_SIZE);
+						System.out.println(rowSelected+" "+colSelected);
+						board.makeMove(rowSelected, colSelected);
+						
+					} else {       // game over
+						board.initBoard(); // restart the game
+					}
+					repaint();  // Call-back paintComponent().
+				}
+			});
 
 		}
 		
@@ -80,7 +97,6 @@ public class GUI extends JFrame {
 				for (int col = 0; col < board.getTotalColumns() ; ++col) {
 					if(board.getDot(row, col) ==Dot.EMPTY) {
 					g.fillOval(CELL_SIZE * (row+1) - GRID_WIDHT_HALF,CELL_SIZE * (col+1) - GRID_WIDHT_HALF,10,10);
-					System.out.println(board.getDot(row, col));
 					}
 				}
 			}

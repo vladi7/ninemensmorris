@@ -113,7 +113,7 @@ public class Board {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS) {
 			return grid[rowSelected][colSelected];
 		} else if (grid[rowSelected][colSelected] == Dot.NOTUSED) {
-			return grid[rowSelected][colSelected];
+			return gridNotUsed[rowSelected][colSelected];
 		} else {
 			return null;
 		}
