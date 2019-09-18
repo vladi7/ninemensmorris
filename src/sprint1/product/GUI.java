@@ -9,9 +9,11 @@ import javax.swing.*;
 import sprint1.product.Board;
 import sprint1.product.Board.Dot;
 import sprint1.product.Board.GameState;
+import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
+
 
 	public static final int CELL_SIZE = 100; // cell width and height (square)
 	public static final int GRID_WIDTH = 8; // Grid-line's width
@@ -56,18 +58,31 @@ public class GUI extends JFrame {
 	class GameBoardCanvas extends JPanel {
 
 		GameBoardCanvas() {
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (board.getGameState() == GameState.PLAYING) {
+					if (board.getGameState() == GameState.PLAYING1) {
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveFirstPhase(colSelected, rowSelected);
+
+					} else if (board.getGameState() == GameState.PLAYING2a) {
+						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
+						board.makeMoveSecondPhaseA(colSelected, rowSelected);
+
+					} else if (board.getGameState() == GameState.PLAYING2b) {
+						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						board.makeMoveSecondPhaseB(colSelectedTo, rowSelectedTo);
 
 					} else { // game over
 						board.initBoard(); // restart the game
 					}
 					repaint(); // Call-back paintComponent().
 				}
+
 			});
 
 		}
@@ -99,14 +114,20 @@ public class GUI extends JFrame {
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF, CELL_SIZE * (col + 1) - GRID_WIDHT_HALF, 10,
 								10);
 					}
-					if (board.getDot(row, col) == Dot.WHITE && !board.allPiecesOnBoard) {
+					if (board.getDot(row, col) == Dot.WHITE && board.getGameState() == GameState.PLAYING1) {
 						g.setColor(Color.WHITE);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);
 					}
-					if (board.getDot(row, col) == Dot.BLACK && !board.allPiecesOnBoard) {
+					if (board.getDot(row, col) == Dot.BLACK && board.getGameState() == GameState.PLAYING1) {
 						g.setColor(Color.BLACK);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);
+					}
+					if (board.getDot(row, col) == Dot.GRAY) {
+						g.setColor(Color.GRAY);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);

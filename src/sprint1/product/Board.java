@@ -4,16 +4,15 @@ public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
-	public boolean allPiecesOnBoard;
 	private int numBlackPieces = 9;
 	private int numWhitePieces = 9;
 
 	public enum Dot {
-		EMPTY, WHITE, BLACK, NOTUSED
+		EMPTY, WHITE, BLACK, NOTUSED, GRAY
 	}
 
 	public enum GameState {
-		PLAYING, DRAW, WHITE_WON, BLACK_WON
+		PLAYING1, PLAYING2a, PLAYING2b, PlAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
 	}
 
 	private GameState currentGameState;
@@ -46,7 +45,7 @@ public class Board {
 
 			}
 		}
-		currentGameState = GameState.PLAYING;
+		currentGameState = GameState.PLAYING1;
 		currentTurn = Dot.WHITE;
 	}
 
@@ -54,15 +53,38 @@ public class Board {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = currentTurn; // Place token
-			if (currentTurn == Dot.WHITE && !allPiecesOnBoard) {
+			if (currentTurn == Dot.WHITE) {
 				numWhitePieces -= 1;
 			}
-			if (currentTurn == Dot.BLACK && !allPiecesOnBoard) {
+			else if (currentTurn == Dot.BLACK) {
 				numBlackPieces -= 1;
 			}
+			System.out.println(numWhitePieces + " " + numBlackPieces);
+
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
-				allPiecesOnBoard = true;
+				currentGameState = GameState.PLAYING2a;
+
 			}
+			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE; // change turn
+		}
+	}
+
+	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
+		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
+				&& grid[rowSelected][colSelected] == currentTurn && grid[rowSelected][colSelected] != Dot.NOTUSED) {
+			grid[rowSelected][colSelected] = Dot.GRAY; // Place token
+			currentGameState = GameState.PLAYING2b;
+
+		}
+	}
+
+	public void makeMoveSecondPhaseB(int rowSelected, int colSelected) {
+		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
+				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
+
+			grid[rowSelected][colSelected] = currentTurn; // Place token
+			currentGameState = GameState.PLAYING2a;
+
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE; // change turn
 		}
 	}
