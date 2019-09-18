@@ -37,6 +37,6 @@ public class TestEmptyBoard {
 
 	@Test
 	public void testInvalidColumn() {
-		assertTrue("", board.getDot(0, 3)==null); 
+		assertTrue("", board.getDot(0, 6)==null); 
 	}
 }

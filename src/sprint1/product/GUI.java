@@ -9,11 +9,9 @@ import javax.swing.*;
 import sprint1.product.Board;
 import sprint1.product.Board.Dot;
 import sprint1.product.Board.GameState;
-import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
-
 
 	public static final int CELL_SIZE = 100; // cell width and height (square)
 	public static final int GRID_WIDTH = 8; // Grid-line's width
@@ -27,6 +25,10 @@ public class GUI extends JFrame {
 	private int CANVAS_WIDTH;
 	private int CANVAS_HEIGHT;
 
+	int moveFromCol;
+	int moveFromRow;
+	int moveFromCol1;
+	int moveFromRow1;
 	private GameBoardCanvas gameBoardCanvas;
 
 	private Board board;
@@ -62,20 +64,29 @@ public class GUI extends JFrame {
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (board.getGameState() == GameState.PLAYING1) {
+					if (board.getGameState() == GameState.PLAYING1) {//placement phase
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveFirstPhase(colSelected, rowSelected);
 
-					} else if (board.getGameState() == GameState.PLAYING2a) {
+					} else if (board.getGameState() == GameState.PLAYING2a) {//selecting the piece to place in the next phase(a) or change it in the next phase(b)
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
+						moveFromRow = rowSelected;
+						moveFromCol = colSelected;
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
-					} else if (board.getGameState() == GameState.PLAYING2b) {
+					} else if (board.getGameState() == GameState.PLAYING2b1) {//after selecting a piece in phase 2 place the piece
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveSecondPhaseB(colSelectedTo, rowSelectedTo);
+						moveFromCol1 = colSelectedTo;
+						moveFromRow1 = rowSelectedTo;
+						board.makeMoveSecondPhaseB1(moveFromRow, moveFromCol, colSelectedTo, rowSelectedTo);
+
+					} else if (board.getGameState() == GameState.PLAYING2b2) {//after selecting a different piece from the initially selected
+						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						board.makeMoveSecondPhaseB1(moveFromRow1, moveFromCol1, colSelectedTo, rowSelectedTo);
 
 					} else { // game over
 						board.initBoard(); // restart the game
@@ -111,26 +122,27 @@ public class GUI extends JFrame {
 					if (board.getDot(row, col) == Dot.EMPTY) {
 						g.setColor(Color.LIGHT_GRAY);
 
-						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF, CELL_SIZE * (col + 1) - GRID_WIDHT_HALF, 10,
-								10);
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF-5, CELL_SIZE * (col + 1) - GRID_WIDHT_HALF-5, 20,
+								20);
 					}
-					if (board.getDot(row, col) == Dot.WHITE && board.getGameState() == GameState.PLAYING1) {
+					if (board.getDot(row, col) == Dot.WHITE) {
 						g.setColor(Color.WHITE);
 
-						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
-								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
-					if (board.getDot(row, col) == Dot.BLACK && board.getGameState() == GameState.PLAYING1) {
+					if (board.getDot(row, col) == Dot.BLACK) {
 						g.setColor(Color.BLACK);
 
-						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
-								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
-					if (board.getDot(row, col) == Dot.GRAY) {
+					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
+							|| board.getGameState() == GameState.PLAYING2a|| board.getGameState() == GameState.PLAYING2b2)) {
 						g.setColor(Color.GRAY);
 
-						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 10,
-								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 10, 30, 30);
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
 				}
 			}

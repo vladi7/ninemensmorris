@@ -4,15 +4,15 @@ public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 9;
-	private int numWhitePieces = 9;
+	private int numBlackPieces = 2;
+	private int numWhitePieces = 2;
 
 	public enum Dot {
 		EMPTY, WHITE, BLACK, NOTUSED, GRAY
 	}
 
 	public enum GameState {
-		PLAYING1, PLAYING2a, PLAYING2b, PlAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
+		PLAYING1, PLAYING2a, PLAYING2b1,PLAYING2b2, PlAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
 	}
 
 	private GameState currentGameState;
@@ -73,21 +73,37 @@ public class Board {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
 				&& grid[rowSelected][colSelected] == currentTurn && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = Dot.GRAY; // Place token
-			currentGameState = GameState.PLAYING2b;
+			currentGameState = GameState.PLAYING2b1;
 
 		}
 	}
 
-	public void makeMoveSecondPhaseB(int rowSelected, int colSelected) {
+	public void makeMoveSecondPhaseB1(int rowFrom, int colFrom, int rowSelected, int colSelected) {
+		if (grid[rowSelected][colSelected] == currentTurn) {
+			grid[rowSelected][colSelected] = Dot.GRAY;
+			grid[colFrom][rowFrom] = currentTurn;
+			currentGameState = GameState.PLAYING2b2;
+
+		}
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
-
 			grid[rowSelected][colSelected] = currentTurn; // Place token
+			grid[colFrom][rowFrom] = Dot.EMPTY;
 			currentGameState = GameState.PLAYING2a;
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE; // change turn
+
+
 		}
 	}
+	public void makeMoveSecondPhaseB2(int rowFrom, int colFrom,int rowSelected, int colSelected) {
+		if(grid[rowSelected][colSelected] == currentTurn)
+		{
+			grid[colSelected][rowSelected] = currentTurn;
+			grid[colFrom][rowFrom] = Dot.EMPTY;
+			currentGameState = GameState.PLAYING2b1;
+		}}
+
 
 	private void updateGameState(Dot turn, int rowSelected, int colSelected) {
 		if (hasWon(turn, rowSelected, colSelected)) { // check for win
