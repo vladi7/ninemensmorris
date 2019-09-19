@@ -17,18 +17,18 @@ public class GUI extends JFrame {
 	public static final int GRID_WIDTH = 8; // Grid-line's width
 	public static final int GRID_WIDHT_HALF = GRID_WIDTH / 2; // Grid-line's half-width
 
-	// Symbols (black/nought) are displayed inside a cell, with padding from border
 	public static final int CELL_PADDING = CELL_SIZE / 6;
 	public static final int SYMBOL_SIZE = CELL_SIZE - CELL_PADDING * 2; // width/height
 	public static final int SYMBOL_STROKE_WIDTH = 8; // pen's stroke width
 
 	private int CANVAS_WIDTH;
 	private int CANVAS_HEIGHT;
+	private JLabel gameStatusBar;
 
-	int moveFromCol;
-	int moveFromRow;
-	int moveFromCol1;
-	int moveFromRow1;
+	private int moveFromCol1;
+	private int moveFromRow1;
+	private int moveFromCol2;
+	private int moveFromRow2;
 	private GameBoardCanvas gameBoardCanvas;
 
 	private Board board;
@@ -51,10 +51,13 @@ public class GUI extends JFrame {
 		CANVAS_WIDTH = CELL_SIZE * board.getTotalRows() + 100;
 		CANVAS_HEIGHT = CELL_SIZE * board.getTotalColumns() + 100;
 		gameBoardCanvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-
+		gameStatusBar = new JLabel("  ");
+		gameStatusBar.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 15));
+		gameStatusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(gameBoardCanvas, BorderLayout.CENTER);
+		contentPane.add(gameStatusBar, BorderLayout.BEFORE_FIRST_LINE);
 	}
 
 	class GameBoardCanvas extends JPanel {
@@ -64,29 +67,35 @@ public class GUI extends JFrame {
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (board.getGameState() == GameState.PLAYING1) {//placement phase
+					if (board.getGameState() == GameState.PLAYING1) {// placement phase
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveFirstPhase(colSelected, rowSelected);
 
-					} else if (board.getGameState() == GameState.PLAYING2a) {//selecting the piece to place in the next phase(a) or change it in the next phase(b)
+					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
+																				// phase(a) or change it in the next
+																				// phase(b)
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
-						moveFromRow = rowSelected;
-						moveFromCol = colSelected;
+						moveFromRow1 = rowSelected;
+						moveFromCol1 = colSelected;
+						
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
-					} else if (board.getGameState() == GameState.PLAYING2b1) {//after selecting a piece in phase 2 place the piece
+					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
+																				// place the piece
+						
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						moveFromCol1 = colSelectedTo;
-						moveFromRow1 = rowSelectedTo;
-						board.makeMoveSecondPhaseB1(moveFromRow, moveFromCol, colSelectedTo, rowSelectedTo);
+						moveFromCol2 = colSelectedTo;
+						moveFromRow2 = rowSelectedTo;
+						board.makeMoveSecondPhaseB1(moveFromCol1,moveFromRow1 , colSelectedTo, rowSelectedTo);
 
-					} else if (board.getGameState() == GameState.PLAYING2b2) {//after selecting a different piece from the initially selected
+					} else if (board.getGameState() == GameState.PLAYING2b2) {// after selecting a different piece from
+																				// the initially selected
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveSecondPhaseB1(moveFromRow1, moveFromCol1, colSelectedTo, rowSelectedTo);
+						board.makeMoveSecondPhaseB2( moveFromRow2,moveFromCol2, colSelectedTo, rowSelectedTo);
 
 					} else { // game over
 						board.initBoard(); // restart the game
@@ -103,6 +112,8 @@ public class GUI extends JFrame {
 			super.paintComponent(g);
 			setBackground(Color.CYAN);
 			drawDots(g);
+			printStatusBar();
+
 		}
 
 		private void drawDots(Graphics g) {
@@ -122,8 +133,8 @@ public class GUI extends JFrame {
 					if (board.getDot(row, col) == Dot.EMPTY) {
 						g.setColor(Color.LIGHT_GRAY);
 
-						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF-5, CELL_SIZE * (col + 1) - GRID_WIDHT_HALF-5, 20,
-								20);
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
 					}
 					if (board.getDot(row, col) == Dot.WHITE) {
 						g.setColor(Color.WHITE);
@@ -138,7 +149,8 @@ public class GUI extends JFrame {
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
 					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
-							|| board.getGameState() == GameState.PLAYING2a|| board.getGameState() == GameState.PLAYING2b2)) {
+							|| board.getGameState() == GameState.PLAYING2a
+							|| board.getGameState() == GameState.PLAYING2b2)) {
 						g.setColor(Color.GRAY);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
@@ -147,6 +159,32 @@ public class GUI extends JFrame {
 				}
 			}
 
+		}
+
+	}
+
+	private void printStatusBar() {
+		if (board.getGameState() == GameState.PLAYING1 && board.getCurrentTurn() == Dot.WHITE) {
+			gameStatusBar.setForeground(Color.BLACK);
+			gameStatusBar.setText("Placement Phase. WHITE Moves. " + board.getNumWhitePiecesFirstPhase()
+					+ " White Pieces Left; " + board.getNumBlackPiecesFirstPhase() + " Black Pieces Left");
+
+		} else if (board.getGameState() == GameState.PLAYING1 && board.getCurrentTurn() == Dot.BLACK) {
+			gameStatusBar.setForeground(Color.BLACK);
+			gameStatusBar.setText("Placement Phase. BLACK Moves. " + board.getNumWhitePiecesFirstPhase()
+					+ " White Pieces Left; " + board.getNumBlackPiecesFirstPhase() + " Black Pieces Left");
+
+		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. WHITE Moves");
+		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. BLACK Moves");
+
+		} else if (board.getGameState() == GameState.PLAYING2b1) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText(
+					"Moving Phase, No Flying Allowed Yet(only when 3 chips left). Pick a Place To Move The Chip Or Pick Another Chip");
 		}
 
 	}
