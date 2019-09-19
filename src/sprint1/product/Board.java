@@ -101,6 +101,7 @@ public class Board {
 			currentGameState = GameState.PLAYING2b1;
 			return;
 		}
+		if(grid[rowSelected][colSelected]!=Dot.EMPTY)
 		grid[rowSelected][colSelected] = currentTurn;
 		grid[rowFrom][colFrom] = Dot.EMPTY;
 		currentGameState = GameState.PLAYING2a;
