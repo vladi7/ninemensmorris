@@ -72,8 +72,6 @@ public class Board {
 
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
-			System.out.println(neighborsArray[23][0]);
-
 		}
 
 	}

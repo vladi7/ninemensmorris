@@ -67,7 +67,7 @@ public class GUI extends JFrame {
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (board.getGameState() == GameState.PLAYING1) {// placement phase
+					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveFirstPhase(colSelected, rowSelected);
