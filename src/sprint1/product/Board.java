@@ -6,7 +6,17 @@ public class Board {
 	private Dot currentTurn;
 	private int numBlackPieces = 2;
 	private int numWhitePieces = 2;
-	private int[][][] adj = {{{0,1},{0,2},{0,3}},{{}}};
+	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
+			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
+			{ 5, 1 }, { 5, 3 }, { 5, 5 }, { 6, 0 }, { 6, 3 }, { 6, 6 } };
+	private final int[][] neighborsArray = { { 1, 9 }, { 0, 2, 4 }, { 1, 14 }, { 4, 10 }, { 1, 3, 5, 7 }, { 4, 13 },
+			{ 7, 11 }, { 4, 6, 8 }, { 7, 12 }, { 0, 10, 21 }, { 3, 9, 11, 18 }, { 6, 10, 15 }, { 8, 13, 17 },
+			{ 5, 12, 14, 20 }, { 2, 13, 23 }, { 11, 16 }, { 15, 17, 19 }, { 12, 16 }, { 10, 19 }, { 16, 18, 20, 22 },
+			{ 13, 19 }, { 9, 22 }, { 19, 21, 23 }, { 14, 22 }, };
+	private final int[][] millsArray = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 9, 10, 11 }, { 12, 13, 14 },
+			{ 15, 16, 17 }, { 18, 19, 20 }, { 21, 22, 23 }, { 0, 9, 21 }, { 3, 10, 18 }, { 6, 11, 15 }, { 1, 4, 7 },
+			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
+
 	public enum Dot {
 		EMPTY, WHITE, BLACK, NOTUSED, GRAY
 	}
@@ -62,7 +72,21 @@ public class Board {
 
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+			System.out.println(neighborsArray[23][0]);
+
 		}
+
+	}
+
+	private int indexOf(int row, int col) {
+		int i = 0;
+		for (int[] position : positionOfCells) {
+			if (position[0] == row && position[1] == col) {
+				return i;
+			}
+			i++;
+		}
+		return 100000;
 	}
 
 	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
@@ -70,7 +94,6 @@ public class Board {
 				&& grid[rowSelected][colSelected] == currentTurn && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			currentGameState = GameState.PLAYING2b1;
-
 		}
 	}
 
@@ -84,7 +107,7 @@ public class Board {
 		}
 
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
-				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
+				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED&&checkValidMoveNoFlying(rowFrom,colFrom,rowSelected, colSelected)) {
 			grid[rowSelected][colSelected] = currentTurn;
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			currentGameState = GameState.PLAYING2a;
@@ -101,8 +124,8 @@ public class Board {
 			currentGameState = GameState.PLAYING2b1;
 			return;
 		}
-		if(grid[rowSelected][colSelected]!=Dot.EMPTY)
-		grid[rowSelected][colSelected] = currentTurn;
+		if (grid[rowSelected][colSelected] != Dot.EMPTY)
+			grid[rowSelected][colSelected] = currentTurn;
 		grid[rowFrom][colFrom] = Dot.EMPTY;
 		currentGameState = GameState.PLAYING2a;
 		currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
@@ -142,8 +165,22 @@ public class Board {
 		return true;
 	}
 
-	public boolean checkValidMove(int col, int row) {		
-		return true;
+	public boolean checkValidMoveNoFlying(int rowFrom, int colFrom,int rowTo, int colTo) {
+		int indexFrom = indexOf(rowFrom, colFrom);
+		int indexTo = indexOf(rowTo, colTo);
+
+		int i = 0;
+		for (int[] neighbors : neighborsArray) {
+			if (i == indexFrom) {
+				for (int neighbor : neighbors) {
+					if (neighbor == indexTo) {
+						return true;
+					}
+				}
+			}
+			i++;
+		}
+		return false;
 	}
 
 	public GameState getGameState() {
