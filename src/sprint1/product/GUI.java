@@ -97,7 +97,8 @@ public class GUI extends JFrame {
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
 
-					} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {// after selecting a different piece from
+					} else if (board.getGameState() == GameState.PLAYING3a
+							|| board.getGameState() == GameState.PLAYING3b) {// after selecting a different piece from
 						// the initially selected
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
@@ -203,11 +204,9 @@ public class GUI extends JFrame {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText(
 					"Moving Phase, No Flying Allowed Yet(only when 3 chips left). Pick a Place To Move The Chip Or Pick Another Chip");
-		}
-		else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
+		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
-			gameStatusBar.setText(
-					"MILL, Please Remove The Piece Of Opposite Player");
+			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
 		}
 
 	}

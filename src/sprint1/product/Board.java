@@ -9,8 +9,8 @@ public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 9;
-	private int numWhitePieces = 9;
+	private int numBlackPieces = 4;
+	private int numWhitePieces = 4;
 	private static List<List<Integer>> currentMillsArray;
 	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
@@ -105,14 +105,19 @@ public class Board {
 
 	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
-				&& (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) && grid[rowSelected][colSelected] != Dot.NOTUSED) {
+				&& (grid[rowSelected][colSelected] == currentTurn
+						|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+						|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL))
+				&& grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			currentGameState = GameState.PLAYING2b1;
 		}
 	}
 
 	public void makeMoveSecondPhaseB1(int rowFrom, int colFrom, int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) {
+		if (grid[rowSelected][colSelected] == currentTurn
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b2;
@@ -136,7 +141,9 @@ public class Board {
 	}
 
 	public void makeMoveSecondPhaseB2(int colFrom, int rowFrom, int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) {
+		if (grid[rowSelected][colSelected] == currentTurn
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b1;
@@ -153,19 +160,17 @@ public class Board {
 	}
 
 	public void makeMoveThirdPhase(int colFrom, int rowFrom) {
-		System.out.println(checkMill(rowFrom, colFrom));
-
 		if (grid[rowFrom][colFrom] == currentTurn && grid[rowFrom][colFrom] != Dot.NOTUSED
 				&& grid[rowFrom][colFrom] != Dot.EMPTY) {
 			currentGameState = GameState.PLAYING3a;
 			return;
 		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3a
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
-			if (currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) {
+			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) || !notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
 				return;
 			}
-			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL) {
+			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL || !notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
 				return;
 			}
@@ -231,6 +236,23 @@ public class Board {
 		return false;
 	}
 
+	public boolean notInTheMillAvailible() {
+
+		for (int row = 0; row < TOTALROWS; ++row) {
+			for (int col = 0; col < TOTALCOLUMNS; ++col) {
+				if (grid[row][col] == Dot.WHITE && currentTurn == Dot.BLACK) {
+					return true;
+				}
+				if (grid[row][col] == Dot.BLACK && currentTurn == Dot.WHITE) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+
+	}
+
 	public boolean checkMill(int colTo, int rowTo) {
 		int indexTo = indexOf(colTo, rowTo);
 
@@ -245,12 +267,13 @@ public class Board {
 				for (int neighbor : millList) {
 					int row = positionOfCells[neighbor][0];
 					int col = positionOfCells[neighbor][1];
-					if (currentTurn == getDot(row, col)||(currentTurn == Dot.WHITE&&getDot(row, col) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(row, col) ==Dot.BLACKMILL)) {
+					if (currentTurn == getDot(row, col)
+							|| (currentTurn == Dot.WHITE && getDot(row, col) == Dot.WHITEMILL)
+							|| (currentTurn == Dot.BLACK && getDot(row, col) == Dot.BLACKMILL)) {
 						i++;
 						dots[i] = indexOf(row, col);
 						if (i == 3) {
 							for (int j = 1; j < dots.length; j++) {
-								System.out.println(dots[j]);
 
 								int rowM = positionOfCells[dots[j]][0];
 								int colM = positionOfCells[dots[j]][1];
