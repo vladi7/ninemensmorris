@@ -1,11 +1,17 @@
 package sprint1.product;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Board {
 	private static final int TOTALROWS = 7;
 	private static final int TOTALCOLUMNS = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 2;
-	private int numWhitePieces = 2;
+	private int numBlackPieces = 9;
+	private int numWhitePieces = 9;
+	private static List<List<Integer>> currentMillsArray;
 	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
 			{ 5, 1 }, { 5, 3 }, { 5, 5 }, { 6, 0 }, { 6, 3 }, { 6, 6 } };
@@ -18,19 +24,25 @@ public class Board {
 			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
 
 	public enum Dot {
-		EMPTY, WHITE, BLACK, NOTUSED, GRAY
+		EMPTY, WHITE, BLACK, NOTUSED, GRAY, BLACKMILL, WHITEMILL
 	}
 
 	public enum GameState {
-		PLAYING1, PLAYING2a, PLAYING2b1, PLAYING2b2, PlAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
+		PLAYING1, PLAYING2a, PLAYING2b1, PLAYING2b2, PLAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
 	}
 
 	private GameState currentGameState;
 
 	private Dot[][] grid;
+	static {
+		Integer[] test = { 0, 1, 2 };
+		List<Integer> list = new ArrayList<Integer>(Arrays.asList(test));
+		// currentMillsArray.add(list);
+	}
 
 	public Board() {
 		grid = new Dot[TOTALROWS][TOTALCOLUMNS];
+		currentMillsArray = new ArrayList<List<Integer>>();
 		initBoard();
 	}
 
@@ -71,6 +83,10 @@ public class Board {
 				currentGameState = GameState.PLAYING2a;
 
 			}
+			if (checkMill(rowSelected, colSelected)) {
+				currentGameState = GameState.PLAYING3a;
+				return;
+			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
 
@@ -89,14 +105,14 @@ public class Board {
 
 	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
-				&& grid[rowSelected][colSelected] == currentTurn && grid[rowSelected][colSelected] != Dot.NOTUSED) {
+				&& (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			currentGameState = GameState.PLAYING2b1;
 		}
 	}
 
 	public void makeMoveSecondPhaseB1(int rowFrom, int colFrom, int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn) {
+		if (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b2;
@@ -105,29 +121,63 @@ public class Board {
 		}
 
 		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
-				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED&&checkValidMoveNoFlying(rowFrom,colFrom,rowSelected, colSelected)) {
+				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED
+				&& checkValidMoveNoFlying(rowFrom, colFrom, rowSelected, colSelected)) {
 			grid[rowSelected][colSelected] = currentTurn;
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			currentGameState = GameState.PLAYING2a;
-
+			if (checkMill(rowSelected, colSelected)) {
+				currentGameState = GameState.PLAYING3b;
+				return;
+			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 
 		}
 	}
 
 	public void makeMoveSecondPhaseB2(int colFrom, int rowFrom, int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn) {
+		if (grid[rowSelected][colSelected] == currentTurn||(currentTurn == Dot.WHITE&&getDot(rowSelected, colSelected) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(rowSelected, colSelected) ==Dot.BLACKMILL)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b1;
 			return;
 		}
-		if (grid[rowSelected][colSelected] != Dot.EMPTY)
+		if (grid[rowSelected][colSelected] != Dot.EMPTY) {
 			grid[rowSelected][colSelected] = currentTurn;
+		}
 		grid[rowFrom][colFrom] = Dot.EMPTY;
 		currentGameState = GameState.PLAYING2a;
+
 		currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 
+	}
+
+	public void makeMoveThirdPhase(int colFrom, int rowFrom) {
+		System.out.println(checkMill(rowFrom, colFrom));
+
+		if (grid[rowFrom][colFrom] == currentTurn && grid[rowFrom][colFrom] != Dot.NOTUSED
+				&& grid[rowFrom][colFrom] != Dot.EMPTY) {
+			currentGameState = GameState.PLAYING3a;
+			return;
+		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3a
+				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
+			if (currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) {
+				currentGameState = GameState.PLAYING3a;
+				return;
+			}
+			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL) {
+				currentGameState = GameState.PLAYING3a;
+				return;
+			}
+			grid[rowFrom][colFrom] = Dot.EMPTY;
+			currentGameState = GameState.PLAYING1;
+			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
+				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
+			grid[rowFrom][colFrom] = Dot.EMPTY;
+			currentGameState = GameState.PLAYING2a;
+			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+		}
 	}
 
 	private void updateGameState(Dot turn, int rowSelected, int colSelected) {
@@ -163,7 +213,7 @@ public class Board {
 		return true;
 	}
 
-	public boolean checkValidMoveNoFlying(int rowFrom, int colFrom,int rowTo, int colTo) {
+	public boolean checkValidMoveNoFlying(int rowFrom, int colFrom, int rowTo, int colTo) {
 		int indexFrom = indexOf(rowFrom, colFrom);
 		int indexTo = indexOf(rowTo, colTo);
 
@@ -179,6 +229,48 @@ public class Board {
 			i++;
 		}
 		return false;
+	}
+
+	public boolean checkMill(int colTo, int rowTo) {
+		int indexTo = indexOf(colTo, rowTo);
+
+		for (int[] mill : millsArray) {
+			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
+
+			int[] dots = new int[4];
+
+			if (millList.contains(indexTo)) {
+				int i = 0;
+
+				for (int neighbor : millList) {
+					int row = positionOfCells[neighbor][0];
+					int col = positionOfCells[neighbor][1];
+					if (currentTurn == getDot(row, col)||(currentTurn == Dot.WHITE&&getDot(row, col) ==Dot.WHITEMILL)||(currentTurn == Dot.BLACK&&getDot(row, col) ==Dot.BLACKMILL)) {
+						i++;
+						dots[i] = indexOf(row, col);
+						if (i == 3) {
+							for (int j = 1; j < dots.length; j++) {
+								System.out.println(dots[j]);
+
+								int rowM = positionOfCells[dots[j]][0];
+								int colM = positionOfCells[dots[j]][1];
+								if (currentTurn == Dot.BLACK) {
+									grid[rowM][colM] = Dot.BLACKMILL;
+								}
+								if (currentTurn == Dot.WHITE) {
+									grid[rowM][colM] = Dot.WHITEMILL;
+								}
+							}
+							return true;
+						}
+					}
+				}
+
+			}
+
+		}
+		return false;
+
 	}
 
 	public GameState getGameState() {
@@ -212,4 +304,5 @@ public class Board {
 	public Dot getCurrentTurn() {
 		return currentTurn;
 	}
+
 }

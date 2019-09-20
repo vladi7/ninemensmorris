@@ -79,23 +79,29 @@ public class GUI extends JFrame {
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						moveFromRow1 = rowSelected;
 						moveFromCol1 = colSelected;
-						
+
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 																				// place the piece
-						
+
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						moveFromCol2 = colSelectedTo;
 						moveFromRow2 = rowSelectedTo;
-						board.makeMoveSecondPhaseB1(moveFromCol1,moveFromRow1 , colSelectedTo, rowSelectedTo);
+						board.makeMoveSecondPhaseB1(moveFromCol1, moveFromRow1, colSelectedTo, rowSelectedTo);
 
 					} else if (board.getGameState() == GameState.PLAYING2b2) {// after selecting a different piece from
 																				// the initially selected
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveSecondPhaseB2( moveFromRow2,moveFromCol2, colSelectedTo, rowSelectedTo);
+						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
+
+					} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {// after selecting a different piece from
+						// the initially selected
+						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
 
 					} else { // game over
 						board.initBoard(); // restart the game
@@ -156,6 +162,18 @@ public class GUI extends JFrame {
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
+					if (board.getDot(row, col) == Dot.WHITEMILL) {
+						g.setColor(Color.WHITE);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+					}
+					if (board.getDot(row, col) == Dot.BLACKMILL) {
+						g.setColor(Color.BLACK);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+					}
 				}
 			}
 
@@ -175,16 +193,21 @@ public class GUI extends JFrame {
 					+ " White Pieces Left; " + board.getNumBlackPiecesFirstPhase() + " Black Pieces Left");
 
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
-			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. WHITE Moves");
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
-			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. BLACK Moves");
 
 		} else if (board.getGameState() == GameState.PLAYING2b1) {
-			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText(
 					"Moving Phase, No Flying Allowed Yet(only when 3 chips left). Pick a Place To Move The Chip Or Pick Another Chip");
+		}
+		else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText(
+					"MILL, Please Remove The Piece Of Opposite Player");
 		}
 
 	}
