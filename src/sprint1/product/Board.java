@@ -343,12 +343,12 @@ public class Board {
 		return SIZE;
 	}
 
-	public Dot getDot(int rowSelected, int colSelected) {
-		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE) {
-			return grid[rowSelected][colSelected];
-		} else {
-			return null;
+	public Dot getDot(int row, int col) {
+		if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
+			return Dot.NOTUSED;
 		}
+		
+		return grid[row][col];
 	}
 
 	public int getNumBlackPiecesFirstPhase() {
