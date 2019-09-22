@@ -7,8 +7,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 import sprint1.product.Board;
-import sprint1.product.Board.Dot;
-import sprint1.product.Board.GameState;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -106,7 +104,7 @@ public class GUI extends JFrame {
 						
 
 					} else { // game over
-						board.initBoard(); // restart the game
+						board.reset(); // restart the game
 					}
 					repaint(); // Call-back paintComponent().
 				}
