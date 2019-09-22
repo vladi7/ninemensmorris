@@ -2,41 +2,32 @@ package sprint1.test;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
+import static  org.hamcrest.CoreMatchers.*;
+
 import org.junit.Test;
 
 import sprint1.product.Board;
-import sprint1.product.Board.Dot;
+import sprint1.product.Dot;
 
 public class TestEmptyBoard {
-
-	private Board board = new Board();
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+	private final Board board = new Board();
 
 	@Test
 	public void testNewBoard() {
-		for (int row = 0; row <board.getTotalRows(); ++row) {
-			for (int col = 0; col < board.getTotalColumns(); ++col) {
-				assertTrue("", board.getDot(row, col)==Dot.EMPTY); 
+		for (int row = 0; row != board.getTotalRows(); ++row) {
+			for (int col = 0; col != board.getTotalColumns(); ++col) {
+				assertThat(board.getDot(row, col), anyOf(is(Dot.EMPTY), is(Dot.NOTUSED)));
 			}
 		}
 	}
 
 	@Test
 	public void testInvalidRow() {
-		assertTrue("", board.getDot(6, 0)==null); 
+		assertThat(board.getDot(board.getTotalRows(), 0), is(nullValue())); 
 	}
 
 	@Test
 	public void testInvalidColumn() {
-		assertTrue("", board.getDot(0, 6)==null); 
+		assertThat(board.getDot(0, board.getTotalColumns()), is(nullValue())); 
 	}
 }
