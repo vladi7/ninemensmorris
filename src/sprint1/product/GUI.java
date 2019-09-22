@@ -7,7 +7,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 import sprint1.product.Board;
-import sprint1.product.Board.Dot;
+import sprint1.product.Dot;
+import sprint1.product.GameState;
+
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -66,12 +68,12 @@ public class GUI extends JFrame {
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (board.getGameState() == Board.GameState.PLAYING1) {// placement phase no check moves
+					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveFirstPhase(colSelected, rowSelected);
 
-					} else if (board.getGameState() == Board.GameState.PLAYING2a) {// selecting the piece to place in the next
+					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
 																				// phase(a) or change it in the next
 																				// phase(b)
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
@@ -81,7 +83,7 @@ public class GUI extends JFrame {
 
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
-					} else if (board.getGameState() == Board.GameState.PLAYING2b1) {// after selecting a piece in phase 2
+					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 					 															// place the piece
 
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
@@ -90,14 +92,14 @@ public class GUI extends JFrame {
 						moveFromRow2 = rowSelectedTo;
 						board.makeMoveSecondPhaseB1(moveFromCol1, moveFromRow1, colSelectedTo, rowSelectedTo);
 
-					} else if (board.getGameState() == Board.GameState.PLAYING2b2) {// after selecting a different piece from
+					} else if (board.getGameState() == GameState.PLAYING2b2) {// after selecting a different piece from
 																				// the initially selected
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
 
-					} else if (board.getGameState() == Board.GameState.PLAYING3a
-							|| board.getGameState() == Board.GameState.PLAYING3b) {// after selecting a different piece from
+					} else if (board.getGameState() == GameState.PLAYING3a
+							|| board.getGameState() == GameState.PLAYING3b) {// after selecting a different piece from
 						// the initially selected
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
@@ -155,9 +157,9 @@ public class GUI extends JFrame {
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
-					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == Board.GameState.PLAYING2b1
-							|| board.getGameState() == Board.GameState.PLAYING2a
-							|| board.getGameState() == Board.GameState.PLAYING2b2)) {
+					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
+							|| board.getGameState() == GameState.PLAYING2a
+							|| board.getGameState() == GameState.PLAYING2b2)) {
 						g.setColor(Color.GRAY);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
@@ -183,36 +185,36 @@ public class GUI extends JFrame {
 	}
 
 	private void printStatusBar() {
-		if (board.getGameState() == Board.GameState.PLAYING1 && board.getCurrentTurn() == Dot.WHITE) {
+		if (board.getGameState() == GameState.PLAYING1 && board.getCurrentTurn() == Dot.WHITE) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Placement Phase. WHITE Moves. " + board.getNumWhitePiecesFirstPhase()
 					+ " White Pieces Left; " + board.getNumBlackPiecesFirstPhase() + " Black Pieces Left");
 
-		} else if (board.getGameState() == Board.GameState.PLAYING1 && board.getCurrentTurn() == Dot.BLACK) {
+		} else if (board.getGameState() == GameState.PLAYING1 && board.getCurrentTurn() == Dot.BLACK) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Placement Phase. BLACK Moves. " + board.getNumWhitePiecesFirstPhase()
 					+ " White Pieces Left; " + board.getNumBlackPiecesFirstPhase() + " Black Pieces Left");
 
-		} else if (board.getGameState() == Board.GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
+		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. WHITE Moves");
-		} else if (board.getGameState() == Board.GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
+		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. BLACK Moves");
 
-		} else if (board.getGameState() == Board.GameState.PLAYING2b1) {
+		} else if (board.getGameState() == GameState.PLAYING2b1) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText(
 					"Moving Phase, No Flying Allowed Yet(only when 3 chips left). Pick a Place To Move The Chip Or Pick Another Chip");
-		} else if (board.getGameState() == Board.GameState.PLAYING3a || board.getGameState() == Board.GameState.PLAYING3b) {
+		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
 		}
-		else if (board.getGameState() == Board.GameState.BLACK_WON ) {
+		else if (board.getGameState() == GameState.BLACK_WON ) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Black Won");
 		}
-		else if (board.getGameState() == Board.GameState.WHITE_WON ) {
+		else if (board.getGameState() == GameState.WHITE_WON ) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("White Won");
 		}

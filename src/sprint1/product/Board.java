@@ -11,13 +11,7 @@ public class Board {
 	private int numWhitePieces = 3;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
-	public enum Dot {	
-		EMPTY, WHITE, BLACK, NOTUSED, GRAY, BLACKMILL, WHITEMILL	
-	}	
 
-	public enum GameState {	
-		PLAYING1, PLAYING2a, PLAYING2b1, PLAYING2b2, PLAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON	
-	}
 	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
 			{ 5, 1 }, { 5, 3 }, { 5, 5 }, { 6, 0 }, { 6, 3 }, { 6, 6 } };
