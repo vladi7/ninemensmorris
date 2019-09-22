@@ -103,6 +103,7 @@ public class GUI extends JFrame {
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
+						
 
 					} else { // game over
 						board.initBoard(); // restart the game
@@ -207,6 +208,14 @@ public class GUI extends JFrame {
 		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
+		}
+		else if (board.getGameState() == GameState.BLACK_WON ) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText("Black Won");
+		}
+		else if (board.getGameState() == GameState.WHITE_WON ) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText("White Won");
 		}
 
 	}
