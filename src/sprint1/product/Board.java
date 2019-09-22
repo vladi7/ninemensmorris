@@ -1,6 +1,5 @@
 package sprint1.product;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ public class Board {
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 
-	private static List<List<Integer>> currentMillsArray;
 	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
 			{ 5, 1 }, { 5, 3 }, { 5, 5 }, { 6, 0 }, { 6, 3 }, { 6, 6 } };
@@ -37,15 +35,10 @@ public class Board {
 	private GameState currentGameState;
 
 	private Dot[][] grid;
-	static {
-		Integer[] test = { 0, 1, 2 };
-		List<Integer> list = new ArrayList<Integer>(Arrays.asList(test));
-		// currentMillsArray.add(list);
-	}
+
 
 	public Board() {
 		grid = new Dot[TOTALROWS][TOTALCOLUMNS];
-		currentMillsArray = new ArrayList<List<Integer>>();
 		initBoard();
 	}
 

@@ -83,7 +83,7 @@ public class GUI extends JFrame {
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
-																				// place the piece
+					 															// place the piece
 
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
