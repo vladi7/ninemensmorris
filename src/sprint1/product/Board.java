@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Board {
-	private static final int TOTALROWS = 7;
-	private static final int TOTALCOLUMNS = 7;
+	private static final int SIZE = 7;
 	private Dot currentTurn;
 	private int numBlackPieces = 3;
 	private int numWhitePieces = 3;
@@ -24,49 +23,38 @@ public class Board {
 			{ 15, 16, 17 }, { 18, 19, 20 }, { 21, 22, 23 }, { 0, 9, 21 }, { 3, 10, 18 }, { 6, 11, 15 }, { 1, 4, 7 },
 			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
 
-	public enum Dot {
-		EMPTY, WHITE, BLACK, NOTUSED, GRAY, BLACKMILL, WHITEMILL
-	}
-
-	public enum GameState {
-		PLAYING1, PLAYING2a, PLAYING2b1, PLAYING2b2, PLAYING3a, PLAYING3b, DRAW, WHITE_WON, BLACK_WON
-	}
-
 	private GameState currentGameState;
 
 	private Dot[][] grid;
 
 
 	public Board() {
-		grid = new Dot[TOTALROWS][TOTALCOLUMNS];
-		initBoard();
+		grid = new Dot[SIZE][SIZE];
+		reset();
 	}
 
-	public void initBoard() {
-		for (int row = 0; row < TOTALROWS; ++row) {
-			for (int col = 0; col < TOTALCOLUMNS; ++col) {
-				if ((row == 0 && col == 1) || (row == 0 && col == 2) || (row == 0 && col == 4) || (row == 0 && col == 5)
-						|| (row == 1 && col == 0) || (row == 1 && col == 0) || (row == 1 && col == 2)
-						|| (row == 1 && col == 4) || (row == 1 && col == 6) || (row == 2 && col == 0)
-						|| (row == 2 && col == 1) || (row == 2 && col == 5) || (row == 2 && col == 6)
-						|| (row == 3 && col == 3) || (row == 4 && col == 0) || (row == 4 && col == 1)
-						|| (row == 4 && col == 5) || (row == 4 && col == 6) || (row == 5 && col == 0)
-						|| (row == 5 && col == 2) || (row == 5 && col == 4) || (row == 5 && col == 6)
-						|| (row == 6 && col == 1) || (row == 6 && col == 2) || (row == 6 && col == 4)
-						|| (row == 6 && col == 5)) {
-					grid[row][col] = Dot.NOTUSED;
-				} else {
-					grid[row][col] = Dot.EMPTY;
-				}
-
-			}
+	public void reset() {
+		for (Dot[] dots : grid) {
+			Arrays.fill(dots, Dot.NOTUSED);
 		}
+		
+		// put Dot.EMPTY in an X and a + shape on the board
+		for (int i = 0; i != SIZE; i++) {
+			grid[SIZE / 2][i] = Dot.EMPTY;
+			grid[i][SIZE / 2] = Dot.EMPTY;
+			grid[i][i] = Dot.EMPTY;
+			grid[SIZE - i - 1][i] = Dot.EMPTY;
+		}
+		
+		// the center is not used
+		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
+		
 		currentGameState = GameState.PLAYING1;
 		currentTurn = Dot.WHITE;
 	}
 
 	public void makeMoveFirstPhase(int rowSelected, int colSelected) {
-		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
+		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 
 			grid[rowSelected][colSelected] = currentTurn;
@@ -106,7 +94,7 @@ public class Board {
 	}
 
 	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
-		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
+		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& (grid[rowSelected][colSelected] == currentTurn
 						|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
 						|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL))
@@ -127,7 +115,7 @@ public class Board {
 
 		}
 
-		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS
+		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED
 				&& (checkValidMoveNoFlying(rowFrom, colFrom, rowSelected, colSelected)
 						|| (currentTurn == Dot.BLACK && numBlackPiecesPhase2 < 4) // flying
@@ -240,8 +228,8 @@ public class Board {
 		if ((numWhitePiecesPhase2 < 3 || numBlackPiecesPhase2 < 3) && currentGameState != GameState.PLAYING1) {
 			return true; // if the number of pieces less than 3
 		}
-		for (int row = 0; row < TOTALROWS; ++row) {
-			for (int col = 0; col < TOTALCOLUMNS; ++col) {
+		for (int row = 0; row < SIZE; ++row) {
+			for (int col = 0; col < SIZE; ++col) {
 				int indexFrom = indexOf(col, row);
 
 				int i = 0;
@@ -285,8 +273,8 @@ public class Board {
 
 	public boolean notInTheMillAvailible() {
 
-		for (int row = 0; row < TOTALROWS; ++row) {
-			for (int col = 0; col < TOTALCOLUMNS; ++col) {
+		for (int row = 0; row < SIZE; ++row) {
+			for (int col = 0; col < SIZE; ++col) {
 				if (grid[row][col] == Dot.WHITE && currentTurn == Dot.BLACK) {
 					return true;
 				}
@@ -348,15 +336,15 @@ public class Board {
 	}
 
 	public int getTotalRows() {
-		return TOTALROWS;
+		return SIZE;
 	}
 
 	public int getTotalColumns() {
-		return TOTALCOLUMNS;
+		return SIZE;
 	}
 
 	public Dot getDot(int rowSelected, int colSelected) {
-		if (rowSelected >= 0 && rowSelected < TOTALROWS && colSelected >= 0 && colSelected < TOTALCOLUMNS) {
+		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE) {
 			return grid[rowSelected][colSelected];
 		} else {
 			return null;
