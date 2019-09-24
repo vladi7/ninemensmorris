@@ -3,13 +3,13 @@ package sprint1.product;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import sprint1.product.Board;
 import sprint1.product.Dot;
 import sprint1.product.GameState;
-
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -25,7 +25,7 @@ public class GUI extends JFrame {
 	private int CANVAS_WIDTH;
 	private int CANVAS_HEIGHT;
 	private JLabel gameStatusBar;
-
+	JButton bChange;
 	private int moveFromCol1;
 	private int moveFromRow1;
 	private int moveFromCol2;
@@ -84,7 +84,7 @@ public class GUI extends JFrame {
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
-					 															// place the piece
+																				// place the piece
 
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
@@ -104,7 +104,6 @@ public class GUI extends JFrame {
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
-						
 
 					} else { // game over
 						board.reset(); // restart the game
@@ -114,6 +113,14 @@ public class GUI extends JFrame {
 
 			});
 
+			bChange = new JButton("Start New Game");
+			add(bChange);
+			bChange.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					board.reset();
+					repaint();
+				}
+			});
 		}
 
 		@Override
@@ -197,26 +204,28 @@ public class GUI extends JFrame {
 
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. WHITE Moves");
+			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. WHITE Moves");
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Moving Phase, No Flying Allowed Yet. Pick a Chip To Move. BLACK Moves");
+			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. BLACK Moves");
 
 		} else if (board.getGameState() == GameState.PLAYING2b1) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText(
-					"Moving Phase, No Flying Allowed Yet(only when 3 chips left). Pick a Place To Move The Chip Or Pick Another Chip");
+					"Moving Phase. Pick a Place To Move The Chip Or Pick Another Chip");
 		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
-		}
-		else if (board.getGameState() == GameState.BLACK_WON ) {
+		} else if (board.getGameState() == GameState.BLACK_WON) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Black Won");
-		}
-		else if (board.getGameState() == GameState.WHITE_WON ) {
+		} else if (board.getGameState() == GameState.WHITE_WON) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("White Won");
+		}
+		else if (board.getGameState() == GameState.DRAW) {
+			gameStatusBar.setForeground(Color.RED);
+			gameStatusBar.setText("Draw");
 		}
 
 	}

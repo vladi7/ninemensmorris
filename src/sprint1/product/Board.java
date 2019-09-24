@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class Board {
 	private static final int SIZE = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 3;
-	private int numWhitePieces = 3;
+	private int numBlackPieces = 9;
+	private int numWhitePieces = 9;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 
@@ -27,7 +27,6 @@ public class Board {
 
 	private Dot[][] grid;
 
-
 	public Board() {
 		grid = new Dot[SIZE][SIZE];
 		reset();
@@ -37,20 +36,22 @@ public class Board {
 		for (Dot[] dots : grid) {
 			Arrays.fill(dots, Dot.NOTUSED);
 		}
-		
-		// put Dot.EMPTY in an X and a + shape on the board
+
 		for (int i = 0; i != SIZE; i++) {
 			grid[SIZE / 2][i] = Dot.EMPTY;
 			grid[i][SIZE / 2] = Dot.EMPTY;
 			grid[i][i] = Dot.EMPTY;
 			grid[SIZE - i - 1][i] = Dot.EMPTY;
 		}
-		
-		// the center is not used
+
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
-		
+
 		currentGameState = GameState.PLAYING1;
 		currentTurn = Dot.WHITE;
+		numBlackPieces = 9;
+		numWhitePieces = 9;
+		numWhitePiecesPhase2 = 0;
+		numBlackPiecesPhase2 = 0;
 	}
 
 	public void makeMoveFirstPhase(int rowSelected, int colSelected) {
@@ -137,8 +138,11 @@ public class Board {
 	public void makeMoveSecondPhaseB2(int colFrom, int rowFrom, int rowSelected, int colSelected) {
 		if (grid[rowSelected][colSelected] == currentTurn
 				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
-				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
-				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACKMILL)|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACK)||(currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITE)) {
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACK)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITE)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b1;
@@ -173,10 +177,10 @@ public class Board {
 				return;
 			}
 			if (currentTurn == Dot.WHITE) {
-				// numBlackPiecesPhase2 -= 1;
+				numBlackPiecesPhase2 -= 1;
 			}
 			if (currentTurn == Dot.BLACK) {
-				// numWhitePiecesPhase2 -= 1;
+				numWhitePiecesPhase2 -= 1;
 			}
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 
@@ -194,10 +198,10 @@ public class Board {
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			if (currentTurn == Dot.WHITE) {
-				// numBlackPiecesPhase2 -= 1;
+				numBlackPiecesPhase2 -= 1;
 			}
 			if (currentTurn == Dot.BLACK) {
-				// numWhitePiecesPhase2 -= 1;
+				numWhitePiecesPhase2 -= 1;
 			}
 
 			currentGameState = GameState.PLAYING2a;
@@ -210,18 +214,18 @@ public class Board {
 	public void updateGameState(Dot turn, int rowSelected, int colSelected) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
-		} /*
-			 * else if (isDraw()) { currentGameState = GameState.DRAW; }
-			 */
+		} else if (isDraw()) {
+			currentGameState = GameState.DRAW;
+		}
 
 	}
 
 	public boolean isDraw() {
 		if (numWhitePiecesPhase2 == 3 && numBlackPiecesPhase2 == 3 && currentGameState != GameState.PLAYING1) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	public boolean hasWon() {
@@ -233,22 +237,26 @@ public class Board {
 				int indexFrom = indexOf(col, row);
 
 				int i = 0;
-				if((getDot(row,col)==Dot.WHITE&&currentTurn == Dot.BLACK)||(getDot(row,col)==Dot.WHITEMILL&&currentTurn == Dot.BLACK)||(getDot(row,col)==Dot.BLACKMILL&&currentTurn == Dot.WHITE)||(getDot(row,col)==Dot.BLACK&&currentTurn == Dot.WHITE)) {
-				for (int[] neighbors : neighborsArray) {
-					if (i == indexFrom) {
-						for (int neighbor : neighbors) {
-							int colTo = positionOfCells[neighbor][0];
-							int rowTo = positionOfCells[neighbor][1];
-							Dot dot = getDot(rowTo, colTo);
-							if (dot == Dot.EMPTY) {
-								return false;
+				if ((getDot(row, col) == Dot.WHITE && currentTurn == Dot.BLACK)
+						|| (getDot(row, col) == Dot.WHITEMILL && currentTurn == Dot.BLACK)
+						|| (getDot(row, col) == Dot.BLACKMILL && currentTurn == Dot.WHITE)
+						|| (getDot(row, col) == Dot.BLACK && currentTurn == Dot.WHITE)) {
+					for (int[] neighbors : neighborsArray) {
+						if (i == indexFrom) {
+							for (int neighbor : neighbors) {
+								int colTo = positionOfCells[neighbor][0];
+								int rowTo = positionOfCells[neighbor][1];
+								Dot dot = getDot(rowTo, colTo);
+								if (dot == Dot.EMPTY || (currentTurn == Dot.BLACK && numBlackPiecesPhase2 < 4) // flying
+										|| (currentTurn == Dot.WHITE && numWhitePiecesPhase2 < 4)) {
+									return false;
+								}
 							}
 						}
+						i++;
 					}
-					i++;
 				}
 			}
-		}
 		}
 		return true;
 	}
@@ -347,7 +355,7 @@ public class Board {
 		if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
 			return Dot.NOTUSED;
 		}
-		
+
 		return grid[row][col];
 	}
 
