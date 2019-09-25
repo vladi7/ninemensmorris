@@ -31,7 +31,7 @@ public class GUI extends JFrame {
 	private int moveFromCol2;
 	private int moveFromRow2;
 	private GameBoardCanvas gameBoardCanvas;
-
+	JLabel label1;
 	private Board board;
 
 	public GUI(Board board) {
@@ -121,12 +121,17 @@ public class GUI extends JFrame {
 					repaint();
 				}
 			});
+
 		}
 
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setBackground(Color.CYAN);
+			if(board.getGameState()== GameState.PLAYING3a) {
+				setBackground(Color.PINK);
+
+			}
 			drawDots(g);
 			printStatusBar();
 
@@ -134,7 +139,20 @@ public class GUI extends JFrame {
 
 		private void drawDots(Graphics g) {
 			g.setColor(Color.BLACK);
-
+			g.drawString("A", 97, 750);
+			g.drawString("B", 197, 750);
+			g.drawString("C", 297, 750);
+			g.drawString("D", 397, 750);
+			g.drawString("E", 497, 750);
+			g.drawString("F", 597, 750);
+			g.drawString("H", 697, 750);
+			g.drawString("1", 50, 705);
+			g.drawString("2", 50, 605);
+			g.drawString("3", 50, 505);
+			g.drawString("4", 50, 405);
+			g.drawString("5", 50, 305);
+			g.drawString("6", 50, 205);
+			g.drawString("7", 50, 105);
 			g.drawRect(100, 100, 600, 600);
 			g.drawRect(200, 200, 400, 400);
 			g.drawRect(300, 300, 200, 200);
@@ -211,8 +229,7 @@ public class GUI extends JFrame {
 
 		} else if (board.getGameState() == GameState.PLAYING2b1) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText(
-					"Moving Phase. Pick a Place To Move The Chip Or Pick Another Chip");
+			gameStatusBar.setText("Moving Phase. Pick a Place To Move The Chip Or Pick Another Chip");
 		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
@@ -222,8 +239,7 @@ public class GUI extends JFrame {
 		} else if (board.getGameState() == GameState.WHITE_WON) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("White Won");
-		}
-		else if (board.getGameState() == GameState.DRAW) {
+		} else if (board.getGameState() == GameState.DRAW) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Draw");
 		}
