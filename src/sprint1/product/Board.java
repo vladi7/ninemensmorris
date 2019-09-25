@@ -194,8 +194,8 @@ public class Board {
 
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
-		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
-				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
+		} else if ((grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
+				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY)|| !notInTheMillAvailible()) {
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			if (currentTurn == Dot.WHITE) {
 				numBlackPiecesPhase2 -= 1;

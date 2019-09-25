@@ -148,7 +148,7 @@ public class GUI extends JFrame {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setBackground(Color.CYAN);
-			if(board.getGameState()== GameState.PLAYING3a) {
+			if(board.getGameState()== GameState.PLAYING3a||board.getGameState()== GameState.PLAYING3b) {
 				setBackground(Color.PINK);
 
 			}
