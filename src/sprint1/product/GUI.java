@@ -25,7 +25,9 @@ public class GUI extends JFrame {
 	private int CANVAS_WIDTH;
 	private int CANVAS_HEIGHT;
 	private JLabel gameStatusBar;
-	JButton bChange;
+	JButton restartChange;
+	JButton resignChange;
+
 	private int moveFromCol1;
 	private int moveFromRow1;
 	private int moveFromCol2;
@@ -113,11 +115,29 @@ public class GUI extends JFrame {
 
 			});
 
-			bChange = new JButton("Start New Game");
-			add(bChange);
-			bChange.addActionListener(new ActionListener() {
+			restartChange = new JButton("Start New Game");
+			resignChange = new JButton("Resign");
+			add(restartChange);
+			add(resignChange);
+
+			restartChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					board.reset();
+					repaint();
+				}
+			});
+			resignChange.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(board.getCurrentTurn() == Dot.BLACK)
+					{
+						board.setGameState(GameState.WHITE_WON);
+					}
+					if(board.getCurrentTurn() == Dot.WHITE)
+					{
+						board.setGameState(GameState.BLACK_WON);
+					}
+					//board.reset();
+
 					repaint();
 				}
 			});

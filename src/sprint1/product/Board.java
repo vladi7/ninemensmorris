@@ -343,6 +343,10 @@ public class Board {
 		return currentGameState;
 	}
 
+	public void setGameState(GameState gamestate) {
+		currentGameState = gamestate;
+	}
+
 	public int getTotalRows() {
 		return SIZE;
 	}
