@@ -112,6 +112,8 @@ public class Board {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b2;
+			System.out.println("1");
+
 			return;
 
 		}

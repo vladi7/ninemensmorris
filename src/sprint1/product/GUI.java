@@ -33,7 +33,6 @@ public class GUI extends JFrame {
 	private int moveFromCol2;
 	private int moveFromRow2;
 	private GameBoardCanvas gameBoardCanvas;
-	JLabel label1;
 	private Board board;
 
 	public GUI(Board board) {
@@ -87,7 +86,6 @@ public class GUI extends JFrame {
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 																				// place the piece
-
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						moveFromCol2 = colSelectedTo;
@@ -96,6 +94,7 @@ public class GUI extends JFrame {
 
 					} else if (board.getGameState() == GameState.PLAYING2b2) {// after selecting a different piece from
 																				// the initially selected
+
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
@@ -107,10 +106,8 @@ public class GUI extends JFrame {
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
 
-					} else { // game over
-						board.reset(); // restart the game
-					}
-					repaint(); // Call-back paintComponent().
+					} 
+					repaint();
 				}
 
 			});
@@ -122,6 +119,7 @@ public class GUI extends JFrame {
 
 			restartChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					resignChange.setEnabled(true);
 					board.reset();
 					repaint();
 				}
@@ -131,12 +129,14 @@ public class GUI extends JFrame {
 					if(board.getCurrentTurn() == Dot.BLACK)
 					{
 						board.setGameState(GameState.WHITE_WON);
+						resignChange.setEnabled(false);;
+
 					}
 					if(board.getCurrentTurn() == Dot.WHITE)
 					{
 						board.setGameState(GameState.BLACK_WON);
+						resignChange.setEnabled(false);;
 					}
-					//board.reset();
 
 					repaint();
 				}
