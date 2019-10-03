@@ -112,7 +112,6 @@ public class Board {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b2;
-			System.out.println("1");
 
 			return;
 
@@ -197,7 +196,16 @@ public class Board {
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		} else if ((grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
-				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY)|| !notInTheMillAvailible()) {
+				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY)
+				|| !notInTheMillAvailible()) {
+			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) || !notInTheMillAvailible()) {
+				currentGameState = GameState.PLAYING3b;
+				return;
+			}
+			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL || !notInTheMillAvailible()) {
+				currentGameState = GameState.PLAYING3b;
+				return;
+			}
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			if (currentTurn == Dot.WHITE) {
 				numBlackPiecesPhase2 -= 1;
