@@ -137,13 +137,7 @@ public class Board {
 	}
 
 	public void makeMoveSecondPhaseB2(int colFrom, int rowFrom, int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn
-				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
-				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
-				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
-				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
-				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACK)
-				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITE)) {
+		if (checkValidTurn2b2(rowSelected, colSelected)) {
 			grid[rowSelected][colSelected] = Dot.GRAY;
 			grid[rowFrom][colFrom] = currentTurn;
 			currentGameState = GameState.PLAYING2b1;
@@ -347,6 +341,19 @@ public class Board {
 		}
 		return false;
 
+	}
+
+	private boolean checkValidTurn2b2(int rowSelected, int colSelected) {
+		if (grid[rowSelected][colSelected] == currentTurn
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
+				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.BLACK)
+				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.WHITE)) {
+			return true;
+		}
+		return false;
 	}
 
 	public GameState getGameState() {
