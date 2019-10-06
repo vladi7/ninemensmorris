@@ -100,8 +100,7 @@ public class GUI extends JFrame {
 						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
 
 					} else if (board.getGameState() == GameState.PLAYING3a
-							|| board.getGameState() == GameState.PLAYING3b) {// after selecting a different piece from
-						// the initially selected
+							|| board.getGameState() == GameState.PLAYING3b) {
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
@@ -116,12 +115,15 @@ public class GUI extends JFrame {
 			resignChange = new JButton("Resign");
 			add(restartChange);
 			add(resignChange);
-
+			resignChange.setEnabled(false);
 			restartChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					resignChange.setEnabled(true);
 					board.reset();
 					repaint();
+					if(board.getGameState() ==GameState.START) {
+						board.setGameState(GameState.PLAYING1);
+					}
 				}
 			});
 			resignChange.addActionListener(new ActionListener() {
@@ -129,13 +131,13 @@ public class GUI extends JFrame {
 					if(board.getCurrentTurn() == Dot.BLACK)
 					{
 						board.setGameState(GameState.WHITE_WON);
-						resignChange.setEnabled(false);;
+						resignChange.setEnabled(false);
 
 					}
 					if(board.getCurrentTurn() == Dot.WHITE)
 					{
 						board.setGameState(GameState.BLACK_WON);
-						resignChange.setEnabled(false);;
+						resignChange.setEnabled(false);
 					}
 
 					repaint();
@@ -152,12 +154,12 @@ public class GUI extends JFrame {
 				setBackground(Color.PINK);
 
 			}
-			drawDots(g);
+			drawDotsLettersNumbers(g);
 			printStatusBar();
 
 		}
 
-		private void drawDots(Graphics g) {
+		private void drawDotsLettersNumbers(Graphics g) {
 			g.setColor(Color.BLACK);
 			g.drawString("A", 97, 750);
 			g.drawString("B", 197, 750);

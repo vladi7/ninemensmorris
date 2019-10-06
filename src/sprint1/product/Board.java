@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class Board {
 	private static final int SIZE = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 9;
-	private int numWhitePieces = 9;
+	private int numBlackPieces = 4;
+	private int numWhitePieces = 4;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 
@@ -46,7 +46,7 @@ public class Board {
 
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 
-		currentGameState = GameState.PLAYING1;
+		currentGameState = GameState.START;
 		currentTurn = Dot.WHITE;
 		numBlackPieces = 9;
 		numWhitePieces = 9;
@@ -54,7 +54,7 @@ public class Board {
 		numBlackPiecesPhase2 = 0;
 	}
 
-	public void makeMoveFirstPhase(int rowSelected, int colSelected) {
+	public void makeMoveFirstPhase(int rowSelected, int colSelected) {//placement phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 
@@ -91,10 +91,10 @@ public class Board {
 			}
 			i++;
 		}
-		return 100000;
+		return -1;
 	}
 
-	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) {
+	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) { //moving phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& (grid[rowSelected][colSelected] == currentTurn
 						|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
