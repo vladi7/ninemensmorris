@@ -14,7 +14,7 @@ public class TestGameStart {
 	
 	@Test
 	public void testStart() {
-		assertThat(board.getGameState(), is(GameState.PLAYING1));
+		assertThat(board.getGameState(), is(GameState.START));
 	}
 	
 	public void testWhiteStarts() {
