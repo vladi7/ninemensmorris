@@ -224,6 +224,12 @@ public class GUI extends JFrame {
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
 					}
+					if (board.getDot(row, col) == Dot.HIGHLIGHT) {
+						g.setColor(Color.ORANGE);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
+					}
 				}
 			}
 
