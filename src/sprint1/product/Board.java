@@ -48,8 +48,8 @@ public class Board {
 
 		currentGameState = GameState.START;
 		currentTurn = Dot.WHITE;
-		numBlackPieces = 4;
-		numWhitePieces = 4;
+		numBlackPieces = 5;
+		numWhitePieces = 5;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
@@ -153,11 +153,11 @@ public class Board {
 			return;
 		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3a
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
-			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) || !notInTheMillAvailible()) {
+			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
 				return;
 			}
-			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL || !notInTheMillAvailible()) {
+			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
 				return;
 			}
@@ -182,11 +182,11 @@ public class Board {
 		} else if ((grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY)
 				|| !notInTheMillAvailible()) {
-			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) || !notInTheMillAvailible()) {
+			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3b;
 				return;
 			}
-			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL || !notInTheMillAvailible()) {
+			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3b;
 				return;
 			}
@@ -204,37 +204,39 @@ public class Board {
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
 	}
-	
+
 	private void highlightValidMoves(int rowSelected, int colSelected) {
 		int index = indexOf(colSelected, rowSelected);
-		System.out.println(index);
 		int i = 0;
+
 		for (int[] neighbors : neighborsArray) {
-			if (i == index) {
+			if (i == index || ((currentTurn == Dot.WHITEMILL || currentTurn == Dot.WHITE) && numWhitePiecesPhase2 < 4)
+					|| ((currentTurn == Dot.BLACKMILL || currentTurn == Dot.BLACK) && numBlackPiecesPhase2 < 4)) {
 				for (int neighbor : neighbors) {
 					int row = positionOfCells[neighbor][0];
 					int col = positionOfCells[neighbor][1];
 
-					if(grid[col][row] == Dot.EMPTY) {
+					if (grid[col][row] == Dot.EMPTY) {
 						grid[col][row] = Dot.HIGHLIGHT;
 					}
-					
+
 				}
 			}
 			i++;
 		}
 	}
-		
+
 	private void setGray() {
 		for (int row = 0; row < SIZE; ++row) {
 			for (int col = 0; col < SIZE; ++col) {
-				if (grid[row][col] == Dot.HIGHLIGHT ) {
+				if (grid[row][col] == Dot.HIGHLIGHT) {
 					grid[row][col] = Dot.EMPTY;
 				}
-				
+
 			}
 		}
 	}
+
 	private void updateGameState(Dot turn, int rowSelected, int colSelected) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
@@ -242,6 +244,8 @@ public class Board {
 			currentGameState = GameState.DRAW;
 		}
 		setGray();
+		clearMills();
+
 	}
 
 	private boolean isDraw() {
@@ -322,6 +326,7 @@ public class Board {
 
 	private boolean checkMill(int colTo, int rowTo) {
 		int indexTo = indexOf(colTo, rowTo);
+		boolean millcheck = false;
 
 		for (int[] mill : millsArray) {
 			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
@@ -351,21 +356,77 @@ public class Board {
 									grid[rowM][colM] = Dot.WHITEMILL;
 								}
 							}
-							return true;
+							millcheck = true;
 						}
-					/*	if (i < 3&&(getDot(row, col) == Dot.WHITEMILL)) {
-							grid[row][col] = Dot.WHITE;
-						}
-						if (i < 3&&(getDot(row, col) == Dot.BLACKMILL)) {
-							grid[row][col] = Dot.BLACK;
-						}*/
+
 					}
 				}
 
 			}
 
 		}
-		return false;
+		return millcheck;
+
+	}
+
+	private void clearMills() {
+		int[] mills = new int[24];
+		for (int[] mill : millsArray) {
+			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
+			int i = 0;
+			int j = 0;
+			int[] dots = new int[3];
+
+			int y = 0;
+			for (int neighbor : millList) {
+
+				int row = positionOfCells[neighbor][0];
+				int col = positionOfCells[neighbor][1];
+				dots[y] = indexOf(row, col);
+				if (i > 0 && grid[col][row] == Dot.BLACK) {
+					grid[col][row] = Dot.BLACKMILL;
+				}
+				if (grid[col][row] == Dot.BLACKMILL) {
+					i++;
+				}
+				if (j > 0 && grid[col][row] == Dot.WHITE) {
+					grid[col][row] = Dot.WHITEMILL;
+				}
+				if (grid[col][row] == Dot.WHITEMILL) {
+
+					j++;
+				}
+				y++;
+			}
+			if (i == 3) {
+				for (int neighbor : millList) {
+					mills[neighbor] = 1;
+				}
+			}
+			if (j == 3) {
+				for (int neighbor : millList) {
+					mills[neighbor] = 1;
+				}
+			}
+			if (i < 3) {
+				for (int neighbor : millList) {
+					int row = positionOfCells[neighbor][0];
+					int col = positionOfCells[neighbor][1];
+					if (grid[col][row] == Dot.BLACKMILL && mills[neighbor] == 0) {
+						grid[col][row] = Dot.BLACK;
+					}
+				}
+			}
+			if (j < 3) {
+				for (int neighbor : millList) {
+					int row = positionOfCells[neighbor][0];
+					int col = positionOfCells[neighbor][1];
+					if (grid[col][row] == Dot.WHITEMILL && mills[neighbor] == 0) {
+						grid[col][row] = Dot.WHITE;
+					}
+				}
+			}
+		}
 
 	}
 

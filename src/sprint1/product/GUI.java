@@ -217,12 +217,20 @@ public class GUI extends JFrame {
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+						g.setColor(Color.RED);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
 					}
 					if (board.getDot(row, col) == Dot.BLACKMILL) {
 						g.setColor(Color.BLACK);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+						g.setColor(Color.RED);
+
+						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
+								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
 					}
 					if (board.getDot(row, col) == Dot.HIGHLIGHT) {
 						g.setColor(Color.ORANGE);
