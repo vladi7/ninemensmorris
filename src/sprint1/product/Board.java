@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class Board {
 	private static final int SIZE = 7;
 	private Dot currentTurn;
-	private int numBlackPieces = 4;
-	private int numWhitePieces = 4;
+	private int numBlackPieces = 9;
+	private int numWhitePieces = 9;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 
@@ -54,7 +54,7 @@ public class Board {
 		numBlackPiecesPhase2 = 0;
 	}
 
-	public void makeMoveFirstPhase(int rowSelected, int colSelected) {//placement phase
+	public void makeMoveFirstPhase(int rowSelected, int colSelected) {// placement phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 
@@ -83,18 +83,7 @@ public class Board {
 
 	}
 
-	private int indexOf(int row, int col) {
-		int i = 0;
-		for (int[] position : positionOfCells) {
-			if (position[0] == row && position[1] == col) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-
-	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) { //moving phase
+	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) { // moving phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& (grid[rowSelected][colSelected] == currentTurn
 						|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
@@ -215,7 +204,7 @@ public class Board {
 		}
 	}
 
-	public void updateGameState(Dot turn, int rowSelected, int colSelected) {
+	private void updateGameState(Dot turn, int rowSelected, int colSelected) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
 		} else if (isDraw()) {
@@ -224,7 +213,7 @@ public class Board {
 
 	}
 
-	public boolean isDraw() {
+	private boolean isDraw() {
 		if (numWhitePiecesPhase2 == 3 && numBlackPiecesPhase2 == 3 && currentGameState != GameState.PLAYING1) {
 			return true;
 		}
@@ -232,7 +221,7 @@ public class Board {
 		return false;
 	}
 
-	public boolean hasWon() {
+	private boolean hasWon() {
 		if ((numWhitePiecesPhase2 < 3 || numBlackPiecesPhase2 < 3) && currentGameState != GameState.PLAYING1) {
 			return true; // if the number of pieces less than 3
 		}
@@ -265,7 +254,7 @@ public class Board {
 		return true;
 	}
 
-	public boolean checkValidMoveNoFlying(int rowFrom, int colFrom, int rowTo, int colTo) {
+	private boolean checkValidMoveNoFlying(int rowFrom, int colFrom, int rowTo, int colTo) {
 		int indexFrom = indexOf(rowFrom, colFrom);
 		int indexTo = indexOf(rowTo, colTo);
 
@@ -283,7 +272,7 @@ public class Board {
 		return false;
 	}
 
-	public boolean notInTheMillAvailible() {
+	private boolean notInTheMillAvailible() {
 
 		for (int row = 0; row < SIZE; ++row) {
 			for (int col = 0; col < SIZE; ++col) {
@@ -300,7 +289,7 @@ public class Board {
 
 	}
 
-	public boolean checkMill(int colTo, int rowTo) {
+	private boolean checkMill(int colTo, int rowTo) {
 		int indexTo = indexOf(colTo, rowTo);
 
 		for (int[] mill : millsArray) {
@@ -333,6 +322,12 @@ public class Board {
 							}
 							return true;
 						}
+					/*	if (i < 3&&(getDot(row, col) == Dot.WHITEMILL)) {
+							grid[row][col] = Dot.WHITE;
+						}
+						if (i < 3&&(getDot(row, col) == Dot.BLACKMILL)) {
+							grid[row][col] = Dot.BLACK;
+						}*/
 					}
 				}
 
@@ -341,6 +336,17 @@ public class Board {
 		}
 		return false;
 
+	}
+
+	private int indexOf(int row, int col) {
+		int i = 0;
+		for (int[] position : positionOfCells) {
+			if (position[0] == row && position[1] == col) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 
 	private boolean checkValidTurn2b2(int rowSelected, int colSelected) {
