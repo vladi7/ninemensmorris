@@ -69,6 +69,8 @@ public class GUI extends JFrame {
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
+					System.out.println(board.getGameState());
+
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
@@ -97,7 +99,9 @@ public class GUI extends JFrame {
 
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
+						int[] output = board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
+						moveFromRow2 =output[0];
+						moveFromCol2 = output[1];
 
 					} else if (board.getGameState() == GameState.PLAYING3a
 							|| board.getGameState() == GameState.PLAYING3b) {
