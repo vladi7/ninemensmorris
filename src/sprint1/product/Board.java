@@ -116,6 +116,7 @@ public class Board {
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			currentGameState = GameState.PLAYING2a;
 			if (checkMill(rowSelected, colSelected)) {
+				setGray();
 				currentGameState = GameState.PLAYING3b;
 				return;
 			}
