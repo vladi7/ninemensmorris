@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The class that is used for board control. Does not include GUI which is in another class.
+ *
+ */
 public class Board {
 	private static final int SIZE = 7;
 	private Dot currentTurn;
@@ -24,14 +28,21 @@ public class Board {
 			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
 
 	private GameState currentGameState;
-
+	
 	private Dot[][] grid;
 
+	/**
+	 * This method is used to create a new grid of size SIZE.
+	 */
 	public Board() {
 		grid = new Dot[SIZE][SIZE];
 		reset();
 	}
 
+	/**
+	 * This method is used to initialize the grid with either NOTUSED or EMPTY cells.
+	 * Since the grid is 7x7 but not all the dots are used so the NOTUSED is used for those
+	 */
 	public void reset() {
 		for (Dot[] dots : grid) {
 			Arrays.fill(dots, Dot.NOTUSED);
@@ -54,6 +65,11 @@ public class Board {
 		numBlackPiecesPhase2 = 0;
 	}
 
+	/** 
+	 * The placement phase. Players are allowed to place pieces but not move them. The mills are allowed
+	 * @param rowSelected the row selected to place the chip
+	 * @param colSelected the column selected to place the chip
+	 */
 	public void makeMoveFirstPhase(int rowSelected, int colSelected) {// placement phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
@@ -83,6 +99,12 @@ public class Board {
 
 	}
 
+	/** 
+	 * The initial phase of moving pieces. The player selects the piece to move but not moving it yet until the phase B.
+	 * The piece gets grayed out.
+	 * @param rowSelected the row selected to place the chip
+	 * @param colSelected the column selected to place the chip
+	 */
 	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) { // moving phase
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& (grid[rowSelected][colSelected] == currentTurn
@@ -91,19 +113,24 @@ public class Board {
 				&& grid[rowSelected][colSelected] != Dot.NOTUSED) {
 			highlightValidMoves(rowSelected, colSelected);
 			grid[rowSelected][colSelected] = Dot.GRAY;
-			currentGameState = GameState.PLAYING2b1;
+			if (currentGameState == GameState.PLAYING2a) {
+				currentGameState = GameState.PLAYING2b1;
+			}
 		}
 	}
 
-	public void makeMoveSecondPhaseB1(int rowFrom, int colFrom, int rowSelected, int colSelected) {
+	/**
+	 * The method to actually move the piece after it was selected. the rowFrom and colFrom are needed to remove the piece from last location
+	 * @param rowFrom row to remove the piece from
+	 * @param colFrom column to remove the piece from
+	 * @param rowSelected row to put the piece to
+	 * @param colSelected column to put the piece to
+	 */
+	public void makeMoveSecondPhaseB(int rowFrom, int colFrom, int rowSelected, int colSelected) {
 		if (grid[rowSelected][colSelected] == currentTurn
 				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
 				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)) {
-			grid[rowSelected][colSelected] = Dot.GRAY;
-			grid[rowFrom][colFrom] = currentTurn;
-			currentGameState = GameState.PLAYING2b2;
-			setGray();
-			highlightValidMoves(rowSelected, colSelected);
+			currentGameState = GameState.PLAYING2b1;
 			return;
 
 		}
@@ -127,32 +154,11 @@ public class Board {
 		}
 	}
 
-	public int[] makeMoveSecondPhaseB2( int rowFrom,int colFrom, int colSelected, int rowSelected) {
-		System.out.println(rowFrom+" "+colFrom+" "+rowSelected+" "+colSelected);
-		int []output = new int[2];
-		if (checkValidTurn2b2(colSelected,rowSelected)) {
-			grid[colSelected][rowSelected] = Dot.GRAY;
-			grid[colFrom][rowFrom] = currentTurn;
-			currentGameState = GameState.PLAYING2b1;
-			output[0]= colSelected;
-			output[1] =rowSelected; 
-			return output;
-		}
-
-		if (grid[rowSelected][colSelected] == Dot.HIGHLIGHT) {
-			grid[rowSelected][colSelected] = currentTurn;
-		}
-		
-		grid[rowFrom][colFrom] = Dot.EMPTY;
-		currentGameState = GameState.PLAYING2a;
-		updateGameState(currentTurn);
-
-		currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
-		output[0]= colSelected;
-		output[1] =rowSelected;
-		return output;
-	}
-
+	/**
+	 * The method to handle mill, when there are 3 pieces in a row. Removes the piece from selected location, even from the mill if other pieces are not available.
+	 * @param colFrom column to remove the piece from.
+	 * @param rowFrom row to remove the piece from.
+	 */
 	public void makeMoveThirdPhase(int colFrom, int rowFrom) {
 		if ((grid[rowFrom][colFrom] == currentTurn
 				|| currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.WHITEMILL
@@ -214,10 +220,15 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Method to highlight moves around the selected chip. Also is used for the first-touch rule to handle the winning or losing situation.
+	 * @param rowSelected row of the chip selected.
+	 * @param colSelected column of the chip selected.
+	 */
 	private void highlightValidMoves(int rowSelected, int colSelected) {
 		int index = indexOf(colSelected, rowSelected);
 		int i = 0;
-
+		int highlightCount = 0;
 		for (int[] neighbors : neighborsArray) {
 			if (i == index || ((currentTurn == Dot.WHITEMILL || currentTurn == Dot.WHITE) && numWhitePiecesPhase2 < 4)
 					|| ((currentTurn == Dot.BLACKMILL || currentTurn == Dot.BLACK) && numBlackPiecesPhase2 < 4)) {
@@ -227,14 +238,28 @@ public class Board {
 
 					if (grid[col][row] == Dot.EMPTY) {
 						grid[col][row] = Dot.HIGHLIGHT;
+						highlightCount++;
 					}
 
 				}
 			}
 			i++;
 		}
+		if (highlightCount == 0 && currentTurn == Dot.WHITE) {
+			currentGameState = GameState.BLACK_WON;
+			setGray();
+			clearMills();
+		}
+		if (highlightCount == 0 && currentTurn == Dot.BLACK) {
+			currentGameState = GameState.WHITE_WON;
+			setGray();
+			clearMills();
+		}
 	}
-
+	
+	/**
+	 * Sets the highlighted cells to gray after the move is done.
+	 */
 	private void setGray() {
 		for (int row = 0; row < SIZE; ++row) {
 			for (int col = 0; col < SIZE; ++col) {
@@ -245,7 +270,11 @@ public class Board {
 			}
 		}
 	}
-
+	
+	/**
+	 * Changes the game state to win or draw given that the conditions met.
+	 * @param turn current turn(black or white).
+	 */
 	private void updateGameState(Dot turn) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
@@ -257,6 +286,10 @@ public class Board {
 
 	}
 
+	/**
+	 * Returns whether the draw condition was met.
+	 * @return boolean indication whether there is draw or not.
+	 */
 	private boolean isDraw() {
 		if (numWhitePiecesPhase2 == 3 && numBlackPiecesPhase2 == 3 && currentGameState != GameState.PLAYING1) {
 			return true;
@@ -265,6 +298,10 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Returns whether one of the winning conditions was met.
+	 * @return boolean to show is the player won or not.
+	 */
 	private boolean hasWon() {
 		if ((numWhitePiecesPhase2 < 3 || numBlackPiecesPhase2 < 3) && currentGameState != GameState.PLAYING1) {
 			return true; // if the number of pieces less than 3
@@ -297,7 +334,15 @@ public class Board {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Checks whether there is a valid move available, not implementing flying since it was implemented in the move method.
+	 * @param rowFrom selected chip row
+	 * @param colFrom selected chip column
+	 * @param rowTo selected to chip row
+	 * @param colTo selected to chip column
+	 * @return
+	 */
 	private boolean checkValidMoveNoFlying(int rowFrom, int colFrom, int rowTo, int colTo) {
 		int indexFrom = indexOf(rowFrom, colFrom);
 		int indexTo = indexOf(rowTo, colTo);
@@ -316,6 +361,10 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Check whether there is a piece not in the mill available for removal
+	 * @return returns a boolean to show if there is a piece not in the mill available to remove.
+	 */
 	private boolean notInTheMillAvailible() {
 
 		for (int row = 0; row < SIZE; ++row) {
@@ -333,6 +382,12 @@ public class Board {
 
 	}
 
+	/**
+	 * checks if the move will cause a mill.
+	 * @param colTo selected column destination of the chip 
+	 * @param rowTo selected row destination of the chip 
+	 * @return a boolean whether the move will cause a mill.
+	 */
 	private boolean checkMill(int colTo, int rowTo) {
 		int indexTo = indexOf(colTo, rowTo);
 		boolean millcheck = false;
@@ -378,6 +433,9 @@ public class Board {
 
 	}
 
+	/**
+	 * This method clears the mills on the board which are not mills anymore.
+	 */
 	private void clearMills() {
 		int[] mills = new int[24];
 		for (int[] mill : millsArray) {
@@ -439,6 +497,12 @@ public class Board {
 
 	}
 
+	/**
+	 * This method is used to translate the row, column form of dot representation to 0-23
+	 * @param row The row of the chip
+	 * @param col The column of the chip
+	 * @return the index of a dot on a scale from 0-23
+	 */
 	private int indexOf(int row, int col) {
 		int i = 0;
 		for (int[] position : positionOfCells) {
@@ -450,32 +514,44 @@ public class Board {
 		return -1;
 	}
 
-	private boolean checkValidTurn2b2(int rowSelected, int colSelected) {
-		if (grid[rowSelected][colSelected] == currentTurn
-				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
-				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)
-				) {
-			return true;
-		}
-		return false;
-	}
-
+	/**
+	 * Getter for currentGameState
+	 * @return currentGameState
+	 */
 	public GameState getGameState() {
 		return currentGameState;
 	}
 
+	/**
+	 * Setter for currentGameState
+	 * @param gamestate the game state to set the current game state to. In the form of GameState... since it is ENUM.
+	 */
 	public void setGameState(GameState gamestate) {
 		currentGameState = gamestate;
 	}
 
+	/**
+	 * getter for total rows used to build GUI
+	 * @return SIZE = 7
+	 */
 	public int getTotalRows() {
 		return SIZE;
 	}
 
+	/**
+	 * getter for total column used to build GUI
+	 * @return SIZE = 7
+	 */
 	public int getTotalColumns() {
 		return SIZE;
 	}
 
+	/**
+	 * Returns the Dot at the specific location
+	 * @param row the row of the specific location
+	 * @param col the column of the specific location
+	 * @return
+	 */
 	public Dot getDot(int row, int col) {
 		if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
 			return Dot.NOTUSED;
@@ -484,14 +560,26 @@ public class Board {
 		return grid[row][col];
 	}
 
+	/**
+	 * getter for number of black pieces left for the placement phase
+	 * @return numBlackPieces
+	 */
 	public int getNumBlackPiecesFirstPhase() {
 		return numBlackPieces;
 	}
 
+	/**
+	 * getter for number of black pieces left for the placement phase
+	 * @return numWhitePieces
+	 */
 	public int getNumWhitePiecesFirstPhase() {
 		return numWhitePieces;
 	}
 
+	/**
+	 * getter for the current turn(black or white).
+	 * @return currentTurn
+	 */
 	public Dot getCurrentTurn() {
 		return currentTurn;
 	}

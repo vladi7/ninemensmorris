@@ -28,13 +28,16 @@ public class GUI extends JFrame {
 	JButton restartChange;
 	JButton resignChange;
 
-	private int moveFromCol1;
-	private int moveFromRow1;
-	private int moveFromCol2;
-	private int moveFromRow2;
+	private int moveFromCol;
+	private int moveFromRow;
+
 	private GameBoardCanvas gameBoardCanvas;
 	private Board board;
-
+	
+	/**
+	 * Creates a GUI for the board given
+	 * @param board the given board
+	 */
 	public GUI(Board board) {
 		this.board = board;
 		setContentPane();
@@ -44,10 +47,17 @@ public class GUI extends JFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * getter for the board
+	 * @return board
+	 */
 	public Board getBoard() {
 		return board;
 	}
 
+	/**
+	 *  Sets content pane
+	 */
 	private void setContentPane() {
 		gameBoardCanvas = new GameBoardCanvas();
 		CANVAS_WIDTH = CELL_SIZE * board.getTotalRows() + 100;
@@ -62,14 +72,21 @@ public class GUI extends JFrame {
 		contentPane.add(gameStatusBar, BorderLayout.BEFORE_FIRST_LINE);
 	}
 
+	/**
+	 * Class that build GUI
+	 *
+	 */
 	class GameBoardCanvas extends JPanel {
 
+		/**
+		 * Constructor for the class GameBoardCanvas.
+		 * Initializes the buttons
+		 */
 		GameBoardCanvas() {
 			this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					System.out.println(board.getGameState());
 
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
@@ -81,8 +98,8 @@ public class GUI extends JFrame {
 																				// phase(b)
 						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
-						moveFromRow1 = rowSelected;
-						moveFromCol1 = colSelected;
+						moveFromRow = rowSelected;
+						moveFromCol = colSelected;
 
 						board.makeMoveSecondPhaseA(colSelected, rowSelected);
 
@@ -90,18 +107,8 @@ public class GUI extends JFrame {
 																				// place the piece
 						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						moveFromCol2 = colSelectedTo;
-						moveFromRow2 = rowSelectedTo;
-						board.makeMoveSecondPhaseB1(moveFromCol1, moveFromRow1, colSelectedTo, rowSelectedTo);
 
-					} else if (board.getGameState() == GameState.PLAYING2b2) {// after selecting a different piece from
-																				// the initially selected
-
-						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						int[] output = board.makeMoveSecondPhaseB2(moveFromRow2, moveFromCol2, colSelectedTo, rowSelectedTo);
-						moveFromRow2 =output[0];
-						moveFromCol2 = output[1];
+						board.makeMoveSecondPhaseB(moveFromCol, moveFromRow, colSelectedTo, rowSelectedTo);
 
 					} else if (board.getGameState() == GameState.PLAYING3a
 							|| board.getGameState() == GameState.PLAYING3b) {
@@ -109,7 +116,7 @@ public class GUI extends JFrame {
 						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
 
-					} 
+					}
 					repaint();
 				}
 
@@ -125,21 +132,19 @@ public class GUI extends JFrame {
 					resignChange.setEnabled(true);
 					board.reset();
 					repaint();
-					if(board.getGameState() ==GameState.START) {
+					if (board.getGameState() == GameState.START) {
 						board.setGameState(GameState.PLAYING1);
 					}
 				}
 			});
 			resignChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(board.getCurrentTurn() == Dot.BLACK)
-					{
+					if (board.getCurrentTurn() == Dot.BLACK) {
 						board.setGameState(GameState.WHITE_WON);
 						resignChange.setEnabled(false);
 
 					}
-					if(board.getCurrentTurn() == Dot.WHITE)
-					{
+					if (board.getCurrentTurn() == Dot.WHITE) {
 						board.setGameState(GameState.BLACK_WON);
 						resignChange.setEnabled(false);
 					}
@@ -149,12 +154,15 @@ public class GUI extends JFrame {
 			});
 
 		}
-
+		
+		/**
+		 * Sets background color. It sets it to another color when the mill is formed
+		 */
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setBackground(Color.CYAN);
-			if(board.getGameState()== GameState.PLAYING3a||board.getGameState()== GameState.PLAYING3b) {
+			if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 				setBackground(Color.PINK);
 
 			}
@@ -163,6 +171,10 @@ public class GUI extends JFrame {
 
 		}
 
+		/**
+		 * The method is used to draw dots, letters, and numbers
+		 * @param g Graphics
+		 */
 		private void drawDotsLettersNumbers(Graphics g) {
 			g.setColor(Color.BLACK);
 			g.drawString("A", 97, 750);
@@ -210,7 +222,9 @@ public class GUI extends JFrame {
 					}
 					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
 							|| board.getGameState() == GameState.PLAYING2a
-							|| board.getGameState() == GameState.PLAYING2b2)) {
+							|| board.getGameState() == GameState.PLAYING2b2
+							|| board.getGameState() == GameState.WHITE_WON
+							|| board.getGameState() == GameState.BLACK_WON)) {
 						g.setColor(Color.GRAY);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
@@ -262,10 +276,10 @@ public class GUI extends JFrame {
 
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.WHITE) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. WHITE Moves");
+			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. WHITE Moves. Note that the First-Touch rule is used!");
 		} else if (board.getGameState() == GameState.PLAYING2a && board.getCurrentTurn() == Dot.BLACK) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. BLACK Moves");
+			gameStatusBar.setText("Moving Phase. Pick a Chip To Move. BLACK Moves. Note that the First-Touch rule is used!");
 
 		} else if (board.getGameState() == GameState.PLAYING2b1) {
 			gameStatusBar.setForeground(Color.BLACK);
