@@ -455,7 +455,7 @@ public class Board {
 
 		for (int[] mill : millsArray) {
 			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
-
+			System.out.println("Hello");
 			int[] dots = new int[4];
 
 			if (millList.contains(indexTo)) {
