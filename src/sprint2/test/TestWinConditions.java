@@ -27,6 +27,7 @@ public class TestWinConditions {
 		board.makeMoveFirstPhase(12);
 		assertEquals(board.getGameState(),GameState.BLACK_WON);
 		System.out.println(board.getGameState());
+		System.out.println(board.getGameState());
 		
 		
 
