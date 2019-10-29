@@ -16,7 +16,7 @@ public class TestWinConditions {
 	private final Board board = new Board(4);
 
 	@Test
-	public void testOpponentBlocked() {
+	public void testWhiteOpponentBlockedBlackWins() {
 		board.makeMoveFirstPhase(6);
 		board.makeMoveFirstPhase(7);
 		board.makeMoveFirstPhase(8);
@@ -26,17 +26,35 @@ public class TestWinConditions {
 		board.makeMoveFirstPhase(17);
 		board.makeMoveFirstPhase(12);
 		assertEquals(board.getGameState(),GameState.BLACK_WON);
-		System.out.println(board.getGameState());
-		System.out.println(board.getGameState());
-		
-		
 
+	}
+	@Test
+	public void testBlackOpponentBlockedWhiteWins() {
+		board.makeMoveFirstPhase(7);
+		board.makeMoveFirstPhase(6);
+		board.makeMoveFirstPhase(11);
+		board.makeMoveFirstPhase(8);
+		board.makeMoveFirstPhase(16);
+		board.makeMoveFirstPhase(15);
+		board.makeMoveFirstPhase(13);
+		board.makeMoveFirstPhase(17);
+		
 		new GUI(board); 
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		board.makeMoveSecondPhaseA(13);
+		board.makeMoveSecondPhaseB(13, 12);
+		new GUI(board); 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(board.getGameState(),GameState.WHITE_WON);
 	}
 }
