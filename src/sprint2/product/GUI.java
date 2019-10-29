@@ -110,14 +110,17 @@ public class GUI extends JFrame {
 																				// place the piece
 						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int rowSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-
-						board.makeMoveSecondPhaseB(moveFromRow,moveFromCol , rowSelectedTo,colSelectedTo);
+						 int dotFrom = board.indexOf(moveFromCol, moveFromRow);
+						 int dotTo = board.indexOf(colSelectedTo, rowSelectedTo);
+						board.makeMoveSecondPhaseB(dotFrom, dotTo);
 
 					} else if (board.getGameState() == GameState.PLAYING3a
 							|| board.getGameState() == GameState.PLAYING3b) {
 						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
 						int  rowSelectedTo= ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
+						 int dotTo = board.indexOf(colSelectedTo, rowSelectedTo);
+						
+						board.makeMoveThirdPhase(dotTo);
 
 					}
 					repaint();

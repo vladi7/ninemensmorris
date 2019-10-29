@@ -175,7 +175,7 @@ public class Board {
 		int colSelected = coordTo[0];
 		int[] coordFrom = this.indexOf(pointFrom);
 		int rowFrom = coordFrom[1];
-		int colTo = coordFrom[0];
+		int colFrom = coordFrom[0];
 		
 		if (grid[rowSelected][colSelected] == currentTurn
 				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
@@ -212,7 +212,10 @@ public class Board {
 	 * @param colFrom column to remove the piece from.
 	 * @param rowFrom row to remove the piece from.
 	 */
-	public void makeMoveThirdPhase(int rowFrom, int colFrom) {
+	public void makeMoveThirdPhase(int pointFrom) {
+		int[] coordFrom = this.indexOf(pointFrom);
+		int rowFrom = coordFrom[1];
+		int colFrom = coordFrom[0];
 		if ((grid[rowFrom][colFrom] == currentTurn
 				|| currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.WHITEMILL
 				|| currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.BLACKMILL)
@@ -333,6 +336,7 @@ public class Board {
 			clearMills();
 
 		}
+		clearMills();
 		setGray();
 	}
 
