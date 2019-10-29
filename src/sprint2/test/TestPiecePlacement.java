@@ -34,7 +34,7 @@ public class TestPiecePlacement {
 
 	}
 	@Test
-	public void testPiecePlacementPhase2() {
+	public void testPieceMovingPhase2() {
 		board.makeMoveFirstPhase(0);
 		board.makeMoveFirstPhase(1);
 		board.makeMoveFirstPhase(2);
