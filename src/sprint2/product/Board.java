@@ -65,8 +65,8 @@ public class Board {
 
 		currentGameState = GameState.START;
 		currentTurn = Dot.WHITE;
-		numBlackPieces = 5;
-		numWhitePieces = 5;
+		numBlackPieces = 4;
+		numWhitePieces = 4;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
@@ -120,15 +120,19 @@ public class Board {
 			}
 			if (checkMill(rowSelected, colSelected)) {
 				currentGameState = GameState.PLAYING3a;
+
 				return;
 			}
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
 				currentGameState = GameState.PLAYING2a;
-				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+				updateGameState(currentTurn);
 
+				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 				return;
 
 			}
+
+
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
@@ -158,6 +162,7 @@ public class Board {
 				currentGameState = GameState.PLAYING2b1;
 			}
 		}
+
 	}
 
 	/**
