@@ -449,13 +449,12 @@ public class Board {
 	 * @param rowTo selected row destination of the chip
 	 * @return a boolean whether the move will cause a mill.
 	 */
-	private boolean checkMill(int colTo, int rowTo) {
+	public boolean checkMill(int colTo, int rowTo) {
 		int indexTo = indexOf(colTo, rowTo);
 		boolean millcheck = false;
 
 		for (int[] mill : millsArray) {
 			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
-			System.out.println("Hello");
 			int[] dots = new int[4];
 
 			if (millList.contains(indexTo)) {

@@ -25,14 +25,14 @@ public class TestPiecePlacement {
 			e.printStackTrace();
 		}
 		assertThat(board.getDot(0, 0), is(Dot.WHITE));
-		assertThat(board.getDot(0, 3), is(Dot.BLACK));
+		assertThat(board.getDot(3, 0), is(Dot.BLACK));
 		for (int row = 0; row != board.getTotalRows(); ++row) {
 			for (int col = 0; col != board.getTotalColumns(); ++col) {
 				if(row==0&&col==0||row==0&&col==3) {
 					continue;				
 				}
 				else {
-					assertThat(board.getDot(row, col), anyOf(is(Dot.EMPTY), is(Dot.NOTUSED)));
+					assertThat(board.getDot(col, row), anyOf(is(Dot.EMPTY), is(Dot.NOTUSED)));
 				}
 			}
 		}
