@@ -90,19 +90,21 @@ public class GUI extends JFrame {
 
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 						int[] point = new int[2];
-					     point[1] = ((e.getY() + 10) / CELL_SIZE) - 1;
-						 point[0] = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveFirstPhase(point);
+					     int col = ((e.getY() + 10) / CELL_SIZE) - 1;
+						 int row = ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotNum = board.indexOf(col, row);
+						board.makeMoveFirstPhase(dotNum);
 
 					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
 																				// phase(a) or change it in the next
 																				// phase(b)
-						int colSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int rowSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
-						moveFromRow = rowSelected;
-						moveFromCol = colSelected;
+						 int col = ((e.getY() + 10) / CELL_SIZE) - 1;
+						 int row = ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotNum = board.indexOf(col, row);
+						moveFromRow = row;
+						moveFromCol = col;
 
-						board.makeMoveSecondPhaseA(rowSelected, colSelected);
+						board.makeMoveSecondPhaseA(dotNum);
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 																				// place the piece

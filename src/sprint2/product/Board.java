@@ -103,9 +103,10 @@ public class Board {
 	 * @param rowSelected the row selected to place the chip
 	 * @param colSelected the column selected to place the chip
 	 */
-	public void makeMoveFirstPhase(int[] point) {// placement phase
-		int rowSelected = point[0];
-		int colSelected = point[1];
+	public void makeMoveFirstPhase(int point) {// placement phase
+			int[] coord = this.indexOf(point);
+			int rowSelected = coord[1];
+			int colSelected = coord[0];
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 
@@ -141,7 +142,10 @@ public class Board {
 	 * @param rowSelected the row selected to place the chip
 	 * @param colSelected the column selected to place the chip
 	 */
-	public void makeMoveSecondPhaseA(int rowSelected, int colSelected) { // moving phase
+	public void makeMoveSecondPhaseA(int point) { // moving phase
+		int[] coord = this.indexOf(point);
+		int rowSelected = coord[1];
+		int colSelected = coord[0];
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& (grid[rowSelected][colSelected] == currentTurn
 						|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
@@ -165,7 +169,14 @@ public class Board {
 	 * @param rowSelected row to put the piece to
 	 * @param colSelected column to put the piece to
 	 */
-	public void makeMoveSecondPhaseB(int rowFrom, int colFrom, int rowSelected, int colSelected) {
+	public void makeMoveSecondPhaseB(int pointFrom, int pointTo) {
+		int[] coordTo = this.indexOf(pointTo);
+		int rowSelected = coordTo[1];
+		int colSelected = coordTo[0];
+		int[] coordFrom = this.indexOf(pointFrom);
+		int rowFrom = coordFrom[1];
+		int colTo = coordFrom[0];
+		
 		if (grid[rowSelected][colSelected] == currentTurn
 				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
 				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)) {
@@ -551,7 +562,7 @@ public class Board {
 	 * @param col The column of the chip
 	 * @return the index of a dot on a scale from 0-23
 	 */
-	private int indexOf(int row, int col) {
+	public int indexOf(int row, int col) {
 		int i = 0;
 		for (int[] position : positionOfCells) {
 			if (position[0] == row && position[1] == col) {
