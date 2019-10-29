@@ -1,4 +1,4 @@
-package sprint1.product;
+package sprint2.product;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,9 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import sprint1.product.Board;
-import sprint1.product.Dot;
-import sprint1.product.GameState;
+import sprint2.product.Board;
+import sprint2.product.Dot;
+import sprint2.product.GameState;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
@@ -89,31 +89,32 @@ public class GUI extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
-						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
-						board.makeMoveFirstPhase(colSelected, rowSelected);
+						int[] point = new int[2];
+					     point[1] = ((e.getY() + 10) / CELL_SIZE) - 1;
+						 point[0] = ((e.getX() + 10) / CELL_SIZE) - 1;
+						board.makeMoveFirstPhase(point);
 
 					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
 																				// phase(a) or change it in the next
 																				// phase(b)
-						int rowSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int colSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
+						int colSelected = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int rowSelected = ((e.getX() + 10) / CELL_SIZE) - 1;
 						moveFromRow = rowSelected;
 						moveFromCol = colSelected;
 
-						board.makeMoveSecondPhaseA(colSelected, rowSelected);
+						board.makeMoveSecondPhaseA(rowSelected, colSelected);
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 																				// place the piece
-						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int rowSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
 
-						board.makeMoveSecondPhaseB(moveFromCol, moveFromRow, colSelectedTo, rowSelectedTo);
+						board.makeMoveSecondPhaseB(moveFromRow,moveFromCol , rowSelectedTo,colSelectedTo);
 
 					} else if (board.getGameState() == GameState.PLAYING3a
 							|| board.getGameState() == GameState.PLAYING3b) {
-						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int  rowSelectedTo= ((e.getX() + 10) / CELL_SIZE) - 1;
 						board.makeMoveThirdPhase(rowSelectedTo, colSelectedTo);
 
 					}

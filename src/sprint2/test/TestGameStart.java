@@ -1,13 +1,13 @@
-package sprint1.test;
+package sprint2.test;
 
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import sprint1.product.Board;
-import sprint1.product.Dot;
-import sprint1.product.GameState;
+import sprint2.product.Board;
+import sprint2.product.Dot;
+import sprint2.product.GameState;
 
 public class TestGameStart {
 	private final Board board = new Board();

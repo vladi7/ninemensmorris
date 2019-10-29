@@ -1,4 +1,4 @@
-package sprint1.test;
+package sprint2.test;
 
 import static org.junit.Assert.*;
 
@@ -6,8 +6,8 @@ import static  org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import sprint1.product.Board;
-import sprint1.product.Dot;
+import sprint2.product.Board;
+import sprint2.product.Dot;
 
 public class TestEmptyBoard {
 	private final Board board = new Board();

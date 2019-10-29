@@ -1,11 +1,12 @@
-package sprint1.test;
+package sprint2.test;
 
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sprint1.product.Board;
-import sprint1.product.GUI;
+
+import sprint2.product.Board;
+import sprint2.product.GUI;
 
 public class TestGUIEmptyBoard {
 	private Board board;

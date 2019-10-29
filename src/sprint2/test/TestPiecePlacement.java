@@ -1,4 +1,4 @@
-package sprint1.test;
+package sprint2.test;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sprint1.product.Board;
-import sprint1.product.Dot;
+import sprint2.product.Board;
+import sprint2.product.Dot;
 
 public class TestPiecePlacement {
 	private final Board board = new Board();;
