@@ -643,7 +643,7 @@ public class Board {
 			return Dot.NOTUSED;
 		}
 
-		return grid[col][row];
+		return grid[row][col];
 	}
 
 	/**

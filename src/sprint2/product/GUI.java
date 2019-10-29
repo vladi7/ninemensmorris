@@ -89,18 +89,17 @@ public class GUI extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
-						int[] point = new int[2];
-					     int col = ((e.getY() + 10) / CELL_SIZE) - 1;
-						 int row = ((e.getX() + 10) / CELL_SIZE) - 1;
-						 int dotNum = board.indexOf(col, row);
+					     int row = ((e.getY() + 10) / CELL_SIZE) - 1;
+						 int col = ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotNum = board.indexOf(row,col);
 						board.makeMoveFirstPhase(dotNum);
 
 					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
 																				// phase(a) or change it in the next
 																				// phase(b)
-						 int col = ((e.getY() + 10) / CELL_SIZE) - 1;
-						 int row = ((e.getX() + 10) / CELL_SIZE) - 1;
-						 int dotNum = board.indexOf(col, row);
+						 int row = ((e.getY() + 10) / CELL_SIZE) - 1;
+						 int col = ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotNum = board.indexOf(row, col);
 						moveFromRow = row;
 						moveFromCol = col;
 
@@ -108,17 +107,17 @@ public class GUI extends JFrame {
 
 					} else if (board.getGameState() == GameState.PLAYING2b1) {// after selecting a piece in phase 2
 																				// place the piece
-						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int rowSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
-						 int dotFrom = board.indexOf(moveFromCol, moveFromRow);
-						 int dotTo = board.indexOf(colSelectedTo, rowSelectedTo);
+						int rowSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
+						int colSelectedTo = ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotFrom = board.indexOf(moveFromRow,moveFromCol);
+						 int dotTo = board.indexOf(rowSelectedTo, colSelectedTo);
 						board.makeMoveSecondPhaseB(dotFrom, dotTo);
 
 					} else if (board.getGameState() == GameState.PLAYING3a
 							|| board.getGameState() == GameState.PLAYING3b) {
-						int colSelectedTo = ((e.getY() + 10) / CELL_SIZE) - 1;
-						int  rowSelectedTo= ((e.getX() + 10) / CELL_SIZE) - 1;
-						 int dotTo = board.indexOf(colSelectedTo, rowSelectedTo);
+						int  rowSelectedTo= ((e.getY() + 10) / CELL_SIZE) - 1;
+						int  colSelectedTo= ((e.getX() + 10) / CELL_SIZE) - 1;
+						 int dotTo = board.indexOf(rowSelectedTo,colSelectedTo );
 						
 						board.makeMoveThirdPhase(dotTo);
 
