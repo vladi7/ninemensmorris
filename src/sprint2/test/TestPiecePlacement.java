@@ -11,19 +11,13 @@ import sprint2.product.Dot;
 import sprint2.product.GUI;
 
 public class TestPiecePlacement {
-	private final Board board = new Board();;
+	private final Board board = new Board(4);
 
 	@Test
 	public void testPiecePlacementPhase1() {
 		board.makeMoveFirstPhase(0);
 		board.makeMoveFirstPhase(1);
-		new GUI(board); 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		assertThat(board.getDot(0, 0), is(Dot.WHITE));
 		assertThat(board.getDot(3, 0), is(Dot.BLACK));
 		for (int row = 0; row != board.getTotalRows(); ++row) {
@@ -39,5 +33,21 @@ public class TestPiecePlacement {
 
 
 	}
+	@Test
+	public void testPiecePlacementPhase2() {
+		board.makeMoveFirstPhase(0);
+		board.makeMoveFirstPhase(1);
+		board.makeMoveFirstPhase(2);
+		board.makeMoveFirstPhase(3);
+		board.makeMoveFirstPhase(4);
+		board.makeMoveFirstPhase(5);
+		board.makeMoveFirstPhase(6);
+		board.makeMoveFirstPhase(7);
+		board.makeMoveSecondPhaseA(0);
+		board.makeMoveSecondPhaseB(0, 9);
 
+		assertThat(board.getDot(0, 0), is(Dot.EMPTY));
+		assertThat(board.getDot(0, 3), is(Dot.WHITE));
+		
+	}
 }
