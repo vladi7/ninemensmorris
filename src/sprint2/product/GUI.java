@@ -288,7 +288,7 @@ public class GUI extends JFrame {
 
 		} else if (board.getGameState() == GameState.PLAYING2b1) {
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Moving Phase. Pick a Place To Move The Chip Or Pick Another Chip");
+			gameStatusBar.setText("Moving Phase. Pick a Place To Move The Chip. Note that the First-Touch rule is used!");
 		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("MILL, Please Remove The Piece Of Opposite Player");
