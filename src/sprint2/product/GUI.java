@@ -299,6 +299,8 @@ public class GUI extends JFrame {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("White Won");
 		} else if (board.getGameState() == GameState.DRAW) {
+			resignChange.setEnabled(false);
+
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Draw");
 		}

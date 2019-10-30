@@ -250,6 +250,7 @@ public class Board {
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
 				currentGameState = GameState.PLAYING2a;
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+				updateGameState(currentTurn);
 
 				return;
 
@@ -273,9 +274,7 @@ public class Board {
 			if (currentTurn == Dot.BLACK) {
 				numWhitePiecesPhase2 -= 1;
 			}
-
 			currentGameState = GameState.PLAYING2a;
-			updateGameState(currentTurn);
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
