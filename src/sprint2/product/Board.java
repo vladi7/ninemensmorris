@@ -30,7 +30,7 @@ public class Board {
 
 	private GameState currentGameState;
 
-	private Dot[][] grid;
+	Dot[][] grid;
 
 	/**
 	 * This method is used to create a new grid of size SIZE.
@@ -103,7 +103,7 @@ public class Board {
 	 * @param rowSelected the row selected to place the chip
 	 * @param colSelected the column selected to place the chip
 	 */
-	public void makeMoveFirstPhase(int point) {// placement phase
+	public boolean makeMoveFirstPhase(int point) {// placement phase
 			int[] coord = this.indexOf(point);
 			int rowSelected = coord[1];
 			int colSelected = coord[0];
@@ -121,21 +121,20 @@ public class Board {
 			if (checkMill(rowSelected, colSelected)) {
 				currentGameState = GameState.PLAYING3a;
 
-				return;
+				return true;
 			}
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
 				currentGameState = GameState.PLAYING2a;
 				updateGameState(currentTurn);
 
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
-				return;
+				return true;
 
 			}
 
-
-
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
+		return false;
 
 	}
 
@@ -146,7 +145,7 @@ public class Board {
 	 * @param rowSelected the row selected to place the chip
 	 * @param colSelected the column selected to place the chip
 	 */
-	public void makeMoveSecondPhaseA(int point) { // moving phase
+	public boolean makeMoveSecondPhaseA(int point) { // moving phase
 		int[] coord = this.indexOf(point);
 		int rowSelected = coord[1];
 		int colSelected = coord[0];
@@ -160,8 +159,10 @@ public class Board {
 				grid[rowSelected][colSelected] = Dot.GRAY;
 
 				currentGameState = GameState.PLAYING2b1;
+				return true;
 			}
 		}
+		return false;
 
 	}
 
@@ -288,7 +289,7 @@ public class Board {
 	 * @param rowSelected row of the chip selected.
 	 * @param colSelected column of the chip selected.
 	 */
-	private int highlightValidMoves(int rowSelected, int colSelected) {
+	public int highlightValidMoves(int rowSelected, int colSelected) {
 		int index = indexOf(colSelected, rowSelected);
 		int i = 0;
 		int highlightCount = 0;
