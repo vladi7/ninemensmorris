@@ -27,12 +27,16 @@ public class GUI extends JFrame {
 	private JLabel gameStatusBar;
 	JButton restartChange;
 	JButton resignChange;
+	JButton vsHuman;
+	JButton vsAI; 
 
 	private int moveFromCol;
 	private int moveFromRow;
 
 	private GameBoardCanvas gameBoardCanvas;
 	private Board board;
+	
+	private GameRegime currentGameRegime; 
 	
 	/**
 	 * Creates a GUI for the board given
@@ -54,10 +58,18 @@ public class GUI extends JFrame {
 	public Board getBoard() {
 		return board;
 	}
+	/**
+	 * getter for the game regime
+	 * @return regime
+	 */
+	public GameRegime getGameRegime() {
+		return currentGameRegime; 
+	}
 
 	/**
 	 *  Sets content pane
 	 */
+
 	private void setContentPane() {
 		gameBoardCanvas = new GameBoardCanvas();
 		CANVAS_WIDTH = CELL_SIZE * board.getTotalRows() + 100;
@@ -129,17 +141,54 @@ public class GUI extends JFrame {
 
 			restartChange = new JButton("Start New Game");
 			resignChange = new JButton("Resign");
+			vsHuman = new JButton("Player vs Player");
+			vsAI = new JButton("Player vs Computer");
+
 			add(restartChange);
 			add(resignChange);
+			add(vsHuman);
+			add(vsAI);
+			vsHuman.setVisible(false);
+			vsAI.setVisible(false);
 			resignChange.setEnabled(false);
 			restartChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					resignChange.setEnabled(true);
+					vsHuman.setVisible(true);
+					vsAI.setVisible(true);
+					resignChange.setEnabled(false);
+					restartChange.setEnabled(false);
+					//board.setGameState(GameState.START);
 					board.reset();
 					repaint();
-					if (board.getGameState() == GameState.START) {
-						board.setGameState(GameState.PLAYING1);
-					}
+					System.out.println(board.getGameState());
+					vsHuman.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+
+							currentGameRegime = GameRegime.P1vP2;
+							vsHuman.setVisible(false);
+							vsAI.setVisible(false);
+							resignChange.setEnabled(true);
+							restartChange.setEnabled(true);
+							board.setGameState(GameState.PLAYING1);
+
+						}
+					});
+					vsAI.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							currentGameRegime = GameRegime.PvsAI;
+							vsHuman.setVisible(false);
+							vsAI.setVisible(false);
+							resignChange.setEnabled(true);
+							restartChange.setEnabled(true);
+							board.setGameState(GameState.PLAYING1);
+
+						}
+					});
+	
+					board.reset();
+					repaint();
+				
 				}
 			});
 			resignChange.addActionListener(new ActionListener() {
@@ -227,7 +276,6 @@ public class GUI extends JFrame {
 					}
 					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
 							|| board.getGameState() == GameState.PLAYING2a
-							|| board.getGameState() == GameState.PLAYING2b2
 							|| board.getGameState() == GameState.WHITE_WON
 							|| board.getGameState() == GameState.BLACK_WON)) {
 						g.setColor(Color.GRAY);
@@ -305,6 +353,11 @@ public class GUI extends JFrame {
 
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Draw");
+		}
+		else if (board.getGameState() == GameState.ChoosingSide) {
+
+			gameStatusBar.setForeground(Color.PINK);
+			gameStatusBar.setText("Pick Your Opponent");
 		}
 
 	}

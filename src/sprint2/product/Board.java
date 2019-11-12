@@ -62,8 +62,8 @@ public class Board {
 		}
 
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
+		currentGameState = GameState.ChoosingSide;
 
-		currentGameState = GameState.START;
 		currentTurn = Dot.WHITE;
 		numBlackPieces = 4;
 		numWhitePieces = 4;
@@ -262,11 +262,11 @@ public class Board {
 				|| !notInTheMillAvailible()) {
 			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3b;
-				return;
+				return true;
 			}
 			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3b;
-				return;
+				return true;
 			}
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 			if (currentTurn == Dot.WHITE) {
@@ -280,6 +280,7 @@ public class Board {
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
+		return true;
 	}
 
 	/**
