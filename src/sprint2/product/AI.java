@@ -40,6 +40,15 @@ public class AI {
 				}
 			}
 		}
+		if (board.getGameState() == GameState.PLAYING3a) {
+			while (true) {
+				int move = rand.nextInt(24);
+				boolean status = board.makeMoveThirdPhase(move);
+				if (status) {
+					break;
+				}
+			}
+		}
 
 	}
 

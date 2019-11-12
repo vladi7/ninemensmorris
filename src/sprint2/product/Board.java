@@ -218,7 +218,7 @@ public class Board {
 	 * @param colFrom column to remove the piece from.
 	 * @param rowFrom row to remove the piece from.
 	 */
-	public void makeMoveThirdPhase(int pointFrom) {
+	public boolean makeMoveThirdPhase(int pointFrom) {
 		int[] coordFrom = this.indexOf(pointFrom);
 		int rowFrom = coordFrom[1];
 		int colFrom = coordFrom[0];
@@ -227,16 +227,16 @@ public class Board {
 				|| currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.BLACKMILL)
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
 			currentGameState = GameState.PLAYING3a;
-			return;
+			return false;
 		} else if (grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3a
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY) {
 			if ((currentTurn == Dot.WHITE && grid[rowFrom][colFrom] == Dot.BLACKMILL) && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
-				return;
+				return false;
 			}
 			if (currentTurn == Dot.BLACK && grid[rowFrom][colFrom] == Dot.WHITEMILL && notInTheMillAvailible()) {
 				currentGameState = GameState.PLAYING3a;
-				return;
+				return false;
 			}
 			if (currentTurn == Dot.WHITE) {
 				numBlackPiecesPhase2 -= 1;
@@ -253,7 +253,7 @@ public class Board {
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 				updateGameState(currentTurn);
 
-				return;
+				return true;
 
 			}
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
