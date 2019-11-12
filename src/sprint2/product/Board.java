@@ -89,7 +89,7 @@ public class Board {
 
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 
-		currentGameState = GameState.START;
+		currentGameState = GameState.ChoosingSide;
 		currentTurn = Dot.WHITE;
 		numBlackPieces = numPieces;
 		numWhitePieces = numPieces;
