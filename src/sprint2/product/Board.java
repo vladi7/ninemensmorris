@@ -275,6 +275,7 @@ public class Board {
 				numWhitePiecesPhase2 -= 1;
 			}
 			currentGameState = GameState.PLAYING2a;
+			updateGameState(currentTurn);
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
@@ -363,6 +364,7 @@ public class Board {
 	 * @return boolean to show is the player won or not.
 	 */
 	private boolean hasWon() {
+		System.out.println(numBlackPiecesPhase2);
 		if ((numWhitePiecesPhase2 < 3 || numBlackPiecesPhase2 < 3) && currentGameState != GameState.PLAYING1) {
 			return true; // if the number of pieces less than 3
 		}

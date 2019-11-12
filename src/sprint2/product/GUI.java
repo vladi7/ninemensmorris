@@ -267,7 +267,9 @@ public class GUI extends JFrame {
 		}
 
 	}
-
+	/**
+	 * This method is used to print the status of the game in the status bar.
+	 * */
 	private void printStatusBar() {
 		if (board.getGameState() == GameState.PLAYING1 && board.getCurrentTurn() == Dot.WHITE) {
 			gameStatusBar.setForeground(Color.BLACK);
