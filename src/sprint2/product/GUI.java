@@ -171,7 +171,8 @@ public class GUI extends JFrame {
 					vsAI.setVisible(true);
 					resignChange.setEnabled(false);
 					restartChange.setEnabled(false);
-
+					restartChange.setVisible(false);
+					resignChange.setVisible(false);
 					//board.setGameState(GameState.START);
 					board.reset();
 					repaint();
@@ -189,6 +190,9 @@ public class GUI extends JFrame {
 					});
 					vsAI.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							restartChange.setVisible(false);
+							resignChange.setVisible(false);
+
 							currentGameRegime = GameRegime.PvsAI;
 							vsHuman.setVisible(false);
 							vsAI.setVisible(false);
@@ -201,6 +205,8 @@ public class GUI extends JFrame {
 					
 					white.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							restartChange.setVisible(true);
+							resignChange.setVisible(true);
 						resignChange.setEnabled(true);
 						restartChange.setEnabled(true);
 						white.setVisible(false);
@@ -212,6 +218,8 @@ public class GUI extends JFrame {
 					
 					black.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							restartChange.setVisible(true);
+							resignChange.setVisible(true);
 						resignChange.setEnabled(true);
 						restartChange.setEnabled(true);
 						white.setVisible(false);
