@@ -183,7 +183,7 @@ public class GUI extends JFrame {
 							vsAI.setVisible(false);
 							white.setVisible(true);
 							black.setVisible(true);
-							board.setGameState(GameState.CHOOSESIDE);
+							board.setGameState(GameState.CHOOSECOLOR);
 
 						}
 					});
@@ -194,7 +194,7 @@ public class GUI extends JFrame {
 							vsAI.setVisible(false);
 							white.setVisible(true);
 							black.setVisible(true);
-							board.setGameState(GameState.CHOOSESIDE);
+							board.setGameState(GameState.CHOOSECOLOR);
 
 						}
 					});
@@ -205,6 +205,7 @@ public class GUI extends JFrame {
 						restartChange.setEnabled(true);
 						white.setVisible(false);
 						black.setVisible(false);
+						board.setCurrentTurn(Dot.WHITE);
 						board.setGameState(GameState.PLAYING1);
 						}
 					});
@@ -215,6 +216,7 @@ public class GUI extends JFrame {
 						restartChange.setEnabled(true);
 						white.setVisible(false);
 						black.setVisible(false);
+						board.setCurrentTurn(Dot.BLACK);
 						board.setGameState(GameState.PLAYING1);
 						}
 					});
@@ -393,7 +395,7 @@ public class GUI extends JFrame {
 			gameStatusBar.setText("Pick Your Opponent");
 		}
 		
-		else if (board.getGameState() == GameState.CHOOSESIDE) {
+		else if (board.getGameState() == GameState.CHOOSECOLOR) {
 			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Choose Your Side");
 		}
