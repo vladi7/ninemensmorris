@@ -64,7 +64,7 @@ public class Board {
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 		currentGameState = GameState.CHOOSEOPPONENT;
 
-		currentTurn = Dot.WHITE;
+		//currentTurn = Dot.WHITE;
 		numBlackPieces = 4;
 		numWhitePieces = 4;
 		numWhitePiecesPhase2 = 0;
@@ -90,7 +90,7 @@ public class Board {
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 
 		currentGameState = GameState.CHOOSEOPPONENT;
-		currentTurn = Dot.WHITE;
+		//currentTurn = Dot.WHITE;
 		numBlackPieces = numPieces;
 		numWhitePieces = numPieces;
 		numWhitePiecesPhase2 = 0;
@@ -677,6 +677,14 @@ public class Board {
 	 */
 	public Dot getCurrentTurn() {
 		return currentTurn;
+	}
+	
+	/**
+	 * setter for current turn(black or white)
+	 * 
+	*/
+	public void setCurrentTurn(Dot dotPiece) {
+		currentTurn = dotPiece; 
 	}
 
 }
