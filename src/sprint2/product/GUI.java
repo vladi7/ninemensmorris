@@ -28,7 +28,9 @@ public class GUI extends JFrame {
 	JButton restartChange;
 	JButton resignChange;
 	JButton vsHuman;
-	JButton vsAI; 
+	JButton vsAI;
+	JButton white;
+	JButton black; 
 
 	private int moveFromCol;
 	private int moveFromRow;
@@ -140,17 +142,28 @@ public class GUI extends JFrame {
 			});
 
 			restartChange = new JButton("Start New Game");
-			resignChange = new JButton("Resign");
-			vsHuman = new JButton("Player vs Player");
-			vsAI = new JButton("Player vs Computer");
-
 			add(restartChange);
+			
+			resignChange = new JButton("Resign");
 			add(resignChange);
-			add(vsHuman);
-			add(vsAI);
-			vsHuman.setVisible(false);
-			vsAI.setVisible(false);
 			resignChange.setEnabled(false);
+			
+			vsHuman = new JButton("Player vs Player");
+			add(vsHuman);
+			vsHuman.setVisible(false);
+			
+			vsAI = new JButton("Player vs Computer");
+			add(vsAI);
+			vsAI.setVisible(false);
+			
+			white = new JButton("White");
+			add(white);
+			white.setVisible(false);
+			
+			black = new JButton("Black");
+			add(black);
+			black.setVisible(false);
+			
 			restartChange.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					resignChange.setEnabled(true);
@@ -158,19 +171,19 @@ public class GUI extends JFrame {
 					vsAI.setVisible(true);
 					resignChange.setEnabled(false);
 					restartChange.setEnabled(false);
+
 					//board.setGameState(GameState.START);
 					board.reset();
 					repaint();
-					System.out.println(board.getGameState());
 					vsHuman.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 
 							currentGameRegime = GameRegime.P1vP2;
 							vsHuman.setVisible(false);
 							vsAI.setVisible(false);
-							resignChange.setEnabled(true);
-							restartChange.setEnabled(true);
-							board.setGameState(GameState.PLAYING1);
+							white.setVisible(true);
+							black.setVisible(true);
+							board.setGameState(GameState.CHOOSESIDE);
 
 						}
 					});
@@ -179,10 +192,30 @@ public class GUI extends JFrame {
 							currentGameRegime = GameRegime.PvsAI;
 							vsHuman.setVisible(false);
 							vsAI.setVisible(false);
-							resignChange.setEnabled(true);
-							restartChange.setEnabled(true);
-							board.setGameState(GameState.PLAYING1);
+							white.setVisible(true);
+							black.setVisible(true);
+							board.setGameState(GameState.CHOOSESIDE);
 
+						}
+					});
+					
+					white.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+						resignChange.setEnabled(true);
+						restartChange.setEnabled(true);
+						white.setVisible(false);
+						black.setVisible(false);
+						board.setGameState(GameState.PLAYING1);
+						}
+					});
+					
+					black.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+						resignChange.setEnabled(true);
+						restartChange.setEnabled(true);
+						white.setVisible(false);
+						black.setVisible(false);
+						board.setGameState(GameState.PLAYING1);
 						}
 					});
 	
@@ -354,10 +387,15 @@ public class GUI extends JFrame {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Draw");
 		}
-		else if (board.getGameState() == GameState.ChoosingSide) {
+		else if (board.getGameState() == GameState.CHOOSEOPPONENT) {
 
-			gameStatusBar.setForeground(Color.PINK);
+			gameStatusBar.setForeground(Color.BLACK);
 			gameStatusBar.setText("Pick Your Opponent");
+		}
+		
+		else if (board.getGameState() == GameState.CHOOSESIDE) {
+			gameStatusBar.setForeground(Color.BLACK);
+			gameStatusBar.setText("Choose Your Side");
 		}
 
 	}
