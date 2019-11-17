@@ -269,13 +269,23 @@ public class Board {
 				updateGameState(currentTurn);
 
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+					System.out.println("hello");
+
+					ai.moveDecider();
+				}
 				// clearMills();
 
 
 				return true;
 
 			}
+			
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+				System.out.println("hello");
+				ai.moveDecider();
+			}
 		} else if ((grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
 				&& grid[rowFrom][colFrom] != Dot.NOTUSED && grid[rowFrom][colFrom] != Dot.EMPTY)
 				|| !notInTheMillAvailible()) {
@@ -298,6 +308,10 @@ public class Board {
 			updateGameState(currentTurn);
 			// clearMills();
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+				System.out.println("hello");
+				ai.moveDecider();
+			}
 		}
 		return true;
 	}
