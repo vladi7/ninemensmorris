@@ -38,7 +38,7 @@ public class GUI extends JFrame {
 	private GameBoardCanvas gameBoardCanvas;
 	private Board board;
 	
-	private GameRegime currentGameRegime; 
+	
 	
 	/**
 	 * Creates a GUI for the board given
@@ -46,6 +46,7 @@ public class GUI extends JFrame {
 	 */
 	public GUI(Board board) {
 		this.board = board;
+
 		setContentPane();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -60,14 +61,7 @@ public class GUI extends JFrame {
 	public Board getBoard() {
 		return board;
 	}
-	/**
-	 * getter for the game regime
-	 * @return regime
-	 */
-	public GameRegime getGameRegime() {
-		return currentGameRegime; 
-	}
-
+	
 	/**
 	 *  Sets content pane
 	 */
@@ -98,15 +92,16 @@ public class GUI extends JFrame {
 		 */
 		GameBoardCanvas() {
 			this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
+			
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-
+					
 					if (board.getGameState() == GameState.PLAYING1) {// placement phase no check moves
 					     int row = ((e.getY() + 10) / CELL_SIZE) - 1;
 						 int col = ((e.getX() + 10) / CELL_SIZE) - 1;
 						 int dotNum = board.indexOf(row,col);
 						board.makeMoveFirstPhase(dotNum);
+						
 
 					} else if (board.getGameState() == GameState.PLAYING2a) {// selecting the piece to place in the next
 																				// phase(a) or change it in the next
@@ -131,12 +126,13 @@ public class GUI extends JFrame {
 							|| board.getGameState() == GameState.PLAYING3b) {
 						int  rowSelectedTo= ((e.getY() + 10) / CELL_SIZE) - 1;
 						int  colSelectedTo= ((e.getX() + 10) / CELL_SIZE) - 1;
-						 int dotTo = board.indexOf(rowSelectedTo,colSelectedTo );
+						int dotTo = board.indexOf(rowSelectedTo,colSelectedTo );
 						
 						board.makeMoveThirdPhase(dotTo);
 
 					}
 					repaint();
+					
 				}
 
 			});
@@ -173,13 +169,13 @@ public class GUI extends JFrame {
 					restartChange.setEnabled(false);
 					restartChange.setVisible(false);
 					resignChange.setVisible(false);
-					//board.setGameState(GameState.START);
 					board.reset();
+					board.setGameState(GameState.CHOOSEOPPONENT);
 					repaint();
 					vsHuman.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 
-							currentGameRegime = GameRegime.P1vP2;
+							board.setCurrentGameRegime(GameRegime.P1vP2);
 							vsHuman.setVisible(false);
 							vsAI.setVisible(false);
 							white.setVisible(true);
@@ -193,7 +189,7 @@ public class GUI extends JFrame {
 							restartChange.setVisible(false);
 							resignChange.setVisible(false);
 
-							currentGameRegime = GameRegime.PvsAI;
+							board.setCurrentGameRegime(GameRegime.PvsAI);
 							vsHuman.setVisible(false);
 							vsAI.setVisible(false);
 							white.setVisible(true);
@@ -212,6 +208,8 @@ public class GUI extends JFrame {
 						white.setVisible(false);
 						black.setVisible(false);
 						board.setCurrentTurn(Dot.WHITE);
+						board.setAiPlayer(Dot.BLACK);
+
 						board.setGameState(GameState.PLAYING1);
 						}
 					});
@@ -225,11 +223,13 @@ public class GUI extends JFrame {
 						white.setVisible(false);
 						black.setVisible(false);
 						board.setCurrentTurn(Dot.BLACK);
+						board.setAiPlayer(Dot.WHITE);
+
 						board.setGameState(GameState.PLAYING1);
 						}
 					});
 	
-					board.reset();
+					//board.reset();
 					repaint();
 				
 				}
@@ -397,10 +397,15 @@ public class GUI extends JFrame {
 			gameStatusBar.setForeground(Color.RED);
 			gameStatusBar.setText("Draw");
 		}
+		else if (board.getGameState() == GameState.START) {
+
+			gameStatusBar.setForeground(Color.BLACK);
+			gameStatusBar.setText("Welcome to Nine Men's Morris");
+		}
 		else if (board.getGameState() == GameState.CHOOSEOPPONENT) {
 
 			gameStatusBar.setForeground(Color.BLACK);
-			gameStatusBar.setText("Pick Your Opponent");
+			gameStatusBar.setText("Pick the regime");
 		}
 		
 		else if (board.getGameState() == GameState.CHOOSECOLOR) {

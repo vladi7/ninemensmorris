@@ -11,20 +11,22 @@ import java.util.stream.Collectors;
  */
 public class Board {
 	private static final int SIZE = 7;
-	private Dot currentTurn;
+	Dot currentTurn;
 	private int numBlackPieces = 9;
 	private int numWhitePieces = 9;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
-
-	private int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
+	private Dot aiPlayer;
+	private GameRegime currentGameRegime; 
+	AI ai = new AI(this);
+	int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
 			{ 5, 1 }, { 5, 3 }, { 5, 5 }, { 6, 0 }, { 6, 3 }, { 6, 6 } };
 	private final int[][] neighborsArray = { { 1, 9 }, { 0, 2, 4 }, { 1, 14 }, { 4, 10 }, { 1, 3, 5, 7 }, { 4, 13 },
 			{ 7, 11 }, { 4, 6, 8 }, { 7, 12 }, { 0, 10, 21 }, { 3, 9, 11, 18 }, { 6, 10, 15 }, { 8, 13, 17 },
 			{ 5, 12, 14, 20 }, { 2, 13, 23 }, { 11, 16 }, { 15, 17, 19 }, { 12, 16 }, { 10, 19 }, { 16, 18, 20, 22 },
 			{ 13, 19 }, { 9, 22 }, { 19, 21, 23 }, { 14, 22 }, };
-	private final int[][] millsArray = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 9, 10, 11 }, { 12, 13, 14 },
+	final int[][] millsArray = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 9, 10, 11 }, { 12, 13, 14 },
 			{ 15, 16, 17 }, { 18, 19, 20 }, { 21, 22, 23 }, { 0, 9, 21 }, { 3, 10, 18 }, { 6, 11, 15 }, { 1, 4, 7 },
 			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
 
@@ -62,7 +64,7 @@ public class Board {
 		}
 
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
-		currentGameState = GameState.CHOOSEOPPONENT;
+		currentGameState = GameState.START;
 
 		//currentTurn = Dot.WHITE;
 		numBlackPieces = 4;
@@ -120,7 +122,6 @@ public class Board {
 			}
 			if (checkMill(rowSelected, colSelected)) {
 				currentGameState = GameState.PLAYING3a;
-
 				return true;
 			}
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
@@ -128,13 +129,20 @@ public class Board {
 				updateGameState(currentTurn);
 
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
-				return true;
 
+				
+				return true;
+				
 			}
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
-		return false;
+
+		if(getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+			
+			ai.moveDecider();
+		}
+		return true;
 
 	}
 
@@ -685,6 +693,18 @@ public class Board {
 	*/
 	public void setCurrentTurn(Dot dotPiece) {
 		currentTurn = dotPiece; 
+	}
+	public Dot getAiPlayer() {
+		return aiPlayer;
+	}
+	public void setAiPlayer(Dot aiPlayer) {
+		this.aiPlayer = aiPlayer;
+	}
+	public GameRegime getCurrentGameRegime() {
+		return currentGameRegime;
+	}
+	public void setCurrentGameRegime(GameRegime currentGameRegime) {
+		this.currentGameRegime = currentGameRegime;
 	}
 
 }
