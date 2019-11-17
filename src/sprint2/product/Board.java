@@ -261,8 +261,7 @@ public class Board {
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 
 			currentGameState = GameState.PLAYING1;
-			if (this.getCurrentGameRegime() == GameRegime.P1vP2)
-				clearMills();
+			clearMills();
 			updateGameState(currentTurn);
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
 				currentGameState = GameState.PLAYING2a;
@@ -312,6 +311,7 @@ public class Board {
 				System.out.println("hello");
 				ai.moveDecider();
 			}
+			
 		}
 		return true;
 	}
