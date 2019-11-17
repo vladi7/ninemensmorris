@@ -261,10 +261,14 @@ public class Board {
 			grid[rowFrom][colFrom] = Dot.EMPTY;
 
 			currentGameState = GameState.PLAYING1;
+			if (this.getCurrentGameRegime() == GameRegime.P1vP2)
+				clearMills();
 			updateGameState(currentTurn);
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
 				currentGameState = GameState.PLAYING2a;
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+				// clearMills();
+
 				updateGameState(currentTurn);
 
 				return true;
@@ -291,7 +295,7 @@ public class Board {
 			}
 			currentGameState = GameState.PLAYING2a;
 			updateGameState(currentTurn);
-
+			// clearMills();
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
 		return true;
@@ -357,7 +361,7 @@ public class Board {
 			clearMills();
 
 		}
-		//clearMills();
+		// clearMills();
 		setGray();
 	}
 
