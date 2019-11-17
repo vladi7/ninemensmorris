@@ -107,7 +107,20 @@ public class AI {
 					}
 				}
 			}
-			return false;
+		}
+		else {
+			for (int row = 0; row < Board.SIZE; ++row) {
+				for (int col = 0; col < Board.SIZE; ++col) {
+					if (board.grid[row][col] == Dot.WHITE && board.currentTurn == Dot.BLACK||board.grid[row][col] == Dot.WHITEMILL && board.currentTurn == Dot.BLACK) {
+						System.out.println(board.indexOf(col, row));
+						move = board.indexOf(col, row);
+					}
+					if (board.grid[row][col] == Dot.BLACK && board.currentTurn == Dot.WHITE||board.grid[row][col] == Dot.BLACKMILL && board.currentTurn == Dot.WHITE) {
+						System.out.println(board.indexOf(col, row));
+						move = board.indexOf(col, row);
+					}
+				}
+			}
 		}
 		return false;
 	}
