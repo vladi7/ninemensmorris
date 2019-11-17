@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
  *
  */
 public class Board {
-	private static final int SIZE = 7;
+	static final int SIZE = 7;
 	Dot currentTurn;
 	private int numBlackPieces = 9;
 	private int numWhitePieces = 9;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 	private Dot aiPlayer;
-	private GameRegime currentGameRegime; 
+	private GameRegime currentGameRegime;
 	AI ai = new AI(this);
 	int[][] positionOfCells = { { 0, 0 }, { 0, 3 }, { 0, 6 }, { 1, 1 }, { 1, 3 }, { 1, 5 }, { 2, 2 }, { 2, 3 },
 			{ 2, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 3, 4 }, { 3, 5 }, { 3, 6 }, { 4, 2 }, { 4, 3 }, { 4, 4 },
@@ -26,9 +26,9 @@ public class Board {
 			{ 7, 11 }, { 4, 6, 8 }, { 7, 12 }, { 0, 10, 21 }, { 3, 9, 11, 18 }, { 6, 10, 15 }, { 8, 13, 17 },
 			{ 5, 12, 14, 20 }, { 2, 13, 23 }, { 11, 16 }, { 15, 17, 19 }, { 12, 16 }, { 10, 19 }, { 16, 18, 20, 22 },
 			{ 13, 19 }, { 9, 22 }, { 19, 21, 23 }, { 14, 22 }, };
-	final int[][] millsArray = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 9, 10, 11 }, { 12, 13, 14 },
-			{ 15, 16, 17 }, { 18, 19, 20 }, { 21, 22, 23 }, { 0, 9, 21 }, { 3, 10, 18 }, { 6, 11, 15 }, { 1, 4, 7 },
-			{ 16, 19, 22 }, { 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
+	final int[][] millsArray = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 9, 10, 11 }, { 12, 13, 14 }, { 15, 16, 17 },
+			{ 18, 19, 20 }, { 21, 22, 23 }, { 0, 9, 21 }, { 3, 10, 18 }, { 6, 11, 15 }, { 1, 4, 7 }, { 16, 19, 22 },
+			{ 8, 12, 17 }, { 5, 13, 20 }, { 2, 14, 23 }, };
 
 	private GameState currentGameState;
 
@@ -41,11 +41,13 @@ public class Board {
 		grid = new Dot[SIZE][SIZE];
 		reset();
 	}
+
 	public Board(int numPieces) {
 		grid = new Dot[SIZE][SIZE];
 		reset(numPieces);
-		
+
 	}
+
 	/**
 	 * This method is used to initialize the grid with either NOTUSED or EMPTY
 	 * cells. Since the grid is 7x7 but not all the dots are used so the NOTUSED is
@@ -66,12 +68,13 @@ public class Board {
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 		currentGameState = GameState.START;
 
-		//currentTurn = Dot.WHITE;
+		// currentTurn = Dot.WHITE;
 		numBlackPieces = 4;
 		numWhitePieces = 4;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
+
 	/**
 	 * This method is used to initialize the grid with either NOTUSED or EMPTY
 	 * cells. Since the grid is 7x7 but not all the dots are used so the NOTUSED is
@@ -92,12 +95,13 @@ public class Board {
 		grid[SIZE / 2][SIZE / 2] = Dot.NOTUSED;
 
 		currentGameState = GameState.CHOOSEOPPONENT;
-		//currentTurn = Dot.WHITE;
+		// currentTurn = Dot.WHITE;
 		numBlackPieces = numPieces;
 		numWhitePieces = numPieces;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
+
 	/**
 	 * The placement phase. Players are allowed to place pieces but not move them.
 	 * The mills are allowed
@@ -106,9 +110,9 @@ public class Board {
 	 * @param colSelected the column selected to place the chip
 	 */
 	public boolean makeMoveFirstPhase(int point) {// placement phase
-			int[] coord = this.indexOf(point);
-			int rowSelected = coord[1];
-			int colSelected = coord[0];
+		int[] coord = this.indexOf(point);
+		int rowSelected = coord[1];
+		int colSelected = coord[0];
 		if (rowSelected >= 0 && rowSelected < SIZE && colSelected >= 0 && colSelected < SIZE
 				&& grid[rowSelected][colSelected] == Dot.EMPTY && grid[rowSelected][colSelected] != Dot.NOTUSED) {
 
@@ -122,6 +126,9 @@ public class Board {
 			}
 			if (checkMill(rowSelected, colSelected)) {
 				currentGameState = GameState.PLAYING3a;
+				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+					ai.moveDecider();
+				}
 				return true;
 			}
 			if (numWhitePieces == 0 && numBlackPieces == 0) {
@@ -130,16 +137,15 @@ public class Board {
 
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 
-				
 				return true;
-				
+
 			}
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 		}
 
-		if(getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
-			
+		if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+
 			ai.moveDecider();
 		}
 		return true;
@@ -190,7 +196,7 @@ public class Board {
 		int[] coordFrom = this.indexOf(pointFrom);
 		int rowFrom = coordFrom[1];
 		int colFrom = coordFrom[0];
-		
+
 		if (grid[rowSelected][colSelected] == currentTurn
 				|| (currentTurn == Dot.WHITE && getDot(rowSelected, colSelected) == Dot.WHITEMILL)
 				|| (currentTurn == Dot.BLACK && getDot(rowSelected, colSelected) == Dot.BLACKMILL)) {
@@ -351,7 +357,7 @@ public class Board {
 			clearMills();
 
 		}
-		clearMills();
+		//clearMills();
 		setGray();
 	}
 
@@ -440,7 +446,7 @@ public class Board {
 	 * @return returns a boolean to show if there is a piece not in the mill
 	 *         available to remove.
 	 */
-	private boolean notInTheMillAvailible() {
+	public boolean notInTheMillAvailible() {
 
 		for (int row = 0; row < SIZE; ++row) {
 			for (int col = 0; col < SIZE; ++col) {
@@ -590,6 +596,7 @@ public class Board {
 		}
 		return -1;
 	}
+
 	/**
 	 * This method is used to translate the row, column form of dot representation
 	 * to 0-23
@@ -608,6 +615,7 @@ public class Board {
 		}
 		return null;
 	}
+
 	/**
 	 * Getter for currentGameState
 	 * 
@@ -686,23 +694,27 @@ public class Board {
 	public Dot getCurrentTurn() {
 		return currentTurn;
 	}
-	
+
 	/**
 	 * setter for current turn(black or white)
 	 * 
-	*/
+	 */
 	public void setCurrentTurn(Dot dotPiece) {
-		currentTurn = dotPiece; 
+		currentTurn = dotPiece;
 	}
+
 	public Dot getAiPlayer() {
 		return aiPlayer;
 	}
+
 	public void setAiPlayer(Dot aiPlayer) {
 		this.aiPlayer = aiPlayer;
 	}
+
 	public GameRegime getCurrentGameRegime() {
 		return currentGameRegime;
 	}
+
 	public void setCurrentGameRegime(GameRegime currentGameRegime) {
 		this.currentGameRegime = currentGameRegime;
 	}
