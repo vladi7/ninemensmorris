@@ -86,30 +86,55 @@ public class AI {
 
 	public boolean formMill() {
 
-		// int indexTo = indexOf(colTo, rowTo);
 		boolean millcheck = false;
+
 		for (int indexTo = 0; indexTo < board.positionOfCells.length; indexTo++) {
 			for (int[] mill : board.millsArray) {
 				List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
-				int[] dots = new int[4];
 
+				int[] dots = new int[4];
+				if(checkedMills.contains(millList)) {
+					millcheck = false;
+				}
 				if (millList.contains(indexTo)) {
 					int i = 0;
-					List<Integer> dotsList = Arrays.stream(dots).boxed().collect(Collectors.toList());
 
 					for (int neighbor : millList) {
+						
 						int row = board.positionOfCells[neighbor][0];
 						int col = board.positionOfCells[neighbor][1];
-						if (board.currentTurn == board.getDot(row, col)
-								|| (board.currentTurn == Dot.WHITE && board.getDot(row, col) == Dot.WHITEMILL)
-								|| (board.currentTurn == Dot.BLACK && board.getDot(row, col) == Dot.BLACKMILL)) {
-							i++;
+						if ((board.currentTurn == Dot.BLACK && board.getDot(col, row) == Dot.BLACK)
+								|| (board.currentTurn == Dot.WHITE && board.getDot(col, row) == Dot.WHITE)
+								|| (board.currentTurn == Dot.BLACK && board.getDot(col, row) == Dot.BLACKMILL)
+								|| (board.currentTurn == Dot.WHITE && board.getDot(col, row) == Dot.WHITEMILL)) {{
 							dots[i] = board.indexOf(row, col);
-							if (i == 3) {
+							i++;
+
+							List<Integer> dotsList = Arrays.stream(dots).boxed().collect(Collectors.toList());
+
+							if (i == 2) {
+								millcheck=true;
+
 								for (int neighborInMill : millList) {
-									if (!dotsList.contains(neighborInMill)) {
+									int rowE = board.positionOfCells[neighborInMill][0];
+									int colE = board.positionOfCells[neighborInMill][1];
+									
+									if ((board.currentTurn == Dot.BLACK && board.getDot(colE, rowE) == Dot.WHITE)
+											|| (board.currentTurn == Dot.WHITE && board.getDot(colE, rowE) == Dot.BLACK)
+											|| (board.currentTurn == Dot.BLACK && board.getDot(colE, rowE) == Dot.WHITEMILL)
+											|| (board.currentTurn == Dot.WHITE && board.getDot(colE, rowE) == Dot.BLACKMILL)) {
+										if(!checkedMills.contains(millList))
+										checkedMills.add(millList);
+
+											millcheck = false;	
+											}		
+								}
+								for (int neighborInMill : millList) {
+									if (!dotsList.contains(neighborInMill)&&millcheck!=false) {
+										System.out.println(dotsList);
 										move = neighborInMill;
-										return true;
+										
+									    return true;
 									}
 								}
 							}
@@ -120,8 +145,11 @@ public class AI {
 				}
 			}
 		}
-		return millcheck;
 	}
+		return millcheck;
+
+}
+	
 
 	public boolean blockTwo() {
 	
@@ -195,9 +223,7 @@ public class AI {
 				List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
 
 				int[] dots = new int[4];
-				//System.out.println(checkedMills);
 				if(checkedMills.contains(millList)) {
-					System.out.println(millList+"+");
 					millcheck = false;
 				}
 				if (millList.contains(indexTo)) {
@@ -229,7 +255,6 @@ public class AI {
 											|| (board.currentTurn == Dot.WHITE && board.getDot(colE, rowE) == Dot.BLACKMILL)) {
 										if(!checkedMills.contains(millList))
 										checkedMills.add(millList);
-										System.out.println(checkedMills);
 
 											millcheck = false;	
 											}		
@@ -237,8 +262,6 @@ public class AI {
 								for (int neighborInMill : millList) {
 									if (!dotsList.contains(neighborInMill)&&millcheck!=false) {
 										move = neighborInMill;
-										System.out.println(dotsList+"**");
-										System.out.println(neighborInMill+"***");
 										
 									    return true;
 									}
