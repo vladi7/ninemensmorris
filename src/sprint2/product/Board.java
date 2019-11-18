@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 public class Board {
 	static final int SIZE = 7;
 	Dot currentTurn;
-	private int numBlackPieces = 9;
-	private int numWhitePieces = 9;
+	private int numBlackPieces = 4;
+	private int numWhitePieces = 4;
 	private int numWhitePiecesPhase2 = 0;
 	private int numBlackPiecesPhase2 = 0;
 	private Dot aiPlayer;
@@ -69,8 +69,8 @@ public class Board {
 		currentGameState = GameState.START;
 
 		// currentTurn = Dot.WHITE;
-		numBlackPieces = 4;
-		numWhitePieces = 4;
+		numBlackPieces = 3;
+		numWhitePieces = 3;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
@@ -173,6 +173,9 @@ public class Board {
 				grid[rowSelected][colSelected] = Dot.GRAY;
 
 				currentGameState = GameState.PLAYING2b1;
+				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+					ai.moveDecider();
+				}
 				return true;
 			}
 		}
@@ -205,7 +208,9 @@ public class Board {
 
 		}
 
-		if (grid[rowSelected][colSelected] == Dot.HIGHLIGHT && grid[rowSelected][colSelected] != Dot.NOTUSED
+		if ((grid[rowSelected][colSelected] == Dot.HIGHLIGHTWHITE
+				|| grid[rowSelected][colSelected] == Dot.HIGHLIGHTBLACK)
+				&& grid[rowSelected][colSelected] != Dot.NOTUSED
 				&& (checkValidMoveNoFlying(rowFrom, colFrom, rowSelected, colSelected)
 						|| (currentTurn == Dot.BLACK && numBlackPiecesPhase2 < 4) // flying
 						|| (currentTurn == Dot.WHITE && numWhitePiecesPhase2 < 4))) {
@@ -220,6 +225,9 @@ public class Board {
 			updateGameState(currentTurn);
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+				ai.moveDecider();
+			}
 
 		}
 	}
@@ -269,20 +277,17 @@ public class Board {
 
 				currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
-					System.out.println("hello");
 
 					ai.moveDecider();
 				}
 				// clearMills();
 
-
 				return true;
 
 			}
-			
+
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
-				System.out.println("hello");
 				ai.moveDecider();
 			}
 		} else if ((grid[rowFrom][colFrom] != currentTurn && currentGameState == GameState.PLAYING3b
@@ -308,10 +313,9 @@ public class Board {
 			// clearMills();
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
-				System.out.println("hello");
 				ai.moveDecider();
 			}
-			
+
 		}
 		return true;
 	}
@@ -334,8 +338,12 @@ public class Board {
 					int row = positionOfCells[neighbor][0];
 					int col = positionOfCells[neighbor][1];
 
-					if (grid[col][row] == Dot.EMPTY) {
-						grid[col][row] = Dot.HIGHLIGHT;
+					if (grid[col][row] == Dot.EMPTY && currentTurn == Dot.WHITE) {
+						grid[col][row] = Dot.HIGHLIGHTWHITE;
+						highlightCount++;
+					}
+					if (grid[col][row] == Dot.EMPTY && currentTurn == Dot.BLACK) {
+						grid[col][row] = Dot.HIGHLIGHTBLACK;
 						highlightCount++;
 					}
 
@@ -350,10 +358,10 @@ public class Board {
 	/**
 	 * Sets the highlighted cells to gray after the move is done.
 	 */
-	private void setGray() {
+	public void setGray() {
 		for (int row = 0; row < SIZE; ++row) {
 			for (int col = 0; col < SIZE; ++col) {
-				if (grid[row][col] == Dot.HIGHLIGHT) {
+				if (grid[row][col] == Dot.HIGHLIGHTWHITE || grid[row][col] == Dot.HIGHLIGHTBLACK) {
 					grid[row][col] = Dot.EMPTY;
 				}
 
@@ -366,16 +374,16 @@ public class Board {
 	 * 
 	 * @param turn current turn(black or white).
 	 */
-	private void updateGameState(Dot turn) {
+	public void updateGameState(Dot turn) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
 			clearMills();
 
-		} else if (isDraw()) {
+		} /*else if (isDraw()) {
 			currentGameState = GameState.DRAW;
 			clearMills();
 
-		}
+		}*/
 		// clearMills();
 		setGray();
 	}
@@ -533,10 +541,57 @@ public class Board {
 
 	}
 
+	public void checkMillsOnTheBoard() {
+		for (int rowOf = 0; rowOf < SIZE; ++rowOf) {
+			for (int colOf = 0; colOf < SIZE; ++colOf) {
+				int indexTo = indexOf(colOf, rowOf);
+				boolean millcheck = false;
+
+				for (int[] mill : millsArray) {
+					List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
+					int[] dots = new int[4];
+
+					if (millList.contains(indexTo)) {
+						int i = 0;
+
+						for (int neighbor : millList) {
+							int row = positionOfCells[neighbor][0];
+							int col = positionOfCells[neighbor][1];
+							if (currentTurn == getDot(row, col)
+									|| (currentTurn == Dot.WHITE && getDot(row, col) == Dot.WHITEMILL)
+									|| (currentTurn == Dot.BLACK && getDot(row, col) == Dot.BLACKMILL)) {
+								i++;
+								dots[i] = indexOf(row, col);
+								if (i == 3) {
+									for (int j = 1; j < dots.length; j++) {
+
+										int rowM = positionOfCells[dots[j]][0];
+										int colM = positionOfCells[dots[j]][1];
+										if (currentTurn == Dot.BLACK) {
+											grid[rowM][colM] = Dot.BLACKMILL;
+										}
+										if (currentTurn == Dot.WHITE) {
+											grid[rowM][colM] = Dot.WHITEMILL;
+										}
+									}
+									millcheck = true;
+								}
+
+							}
+						}
+
+					}
+
+				}
+			}
+		}
+
+	}
+
 	/**
 	 * This method clears the mills on the board which are not mills anymore.
 	 */
-	private void clearMills() {
+	void clearMills() {
 		int[] mills = new int[24];
 		for (int[] mill : millsArray) {
 			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());

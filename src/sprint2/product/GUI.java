@@ -346,7 +346,7 @@ public class GUI extends JFrame {
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
 					}
-					if (board.getDot(row, col) == Dot.HIGHLIGHT) {
+					if (board.getDot(row, col) == Dot.HIGHLIGHTWHITE||board.getDot(row, col) == Dot.HIGHLIGHTBLACK) {
 						g.setColor(Color.ORANGE);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
