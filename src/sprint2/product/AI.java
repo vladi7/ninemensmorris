@@ -462,7 +462,7 @@ public class AI {
 										check = false;
 										break;
 									}
-									System.out.println();
+									System.out.println(neighborInMill+" "+move+" "+dotsList.contains(neighborInMill)+" "+dotsList.contains(move)+" "+millcheck);
 									if (!dotsList.contains(neighborInMill) && millcheck != false
 											&& !dotsList.contains(move)&&check) {
 										moveTo = neighborInMill;
