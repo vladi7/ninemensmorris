@@ -43,7 +43,7 @@ public class AI {
 			;
 			return false;
 		}
-		if (board.getGameState() == GameState.PLAYING3a) {
+		if (board.getGameState() == GameState.PLAYING3a||board.getGameState() == GameState.PLAYING3b) {
 			boolean status = board.makeMoveThirdPhase(move);
 
 			return status;
@@ -63,7 +63,7 @@ public class AI {
 			choosePieceToMove();
 			makeMove();
 
-		} else if (board.getGameState() == GameState.PLAYING3a) {
+		} else if (board.getGameState() == GameState.PLAYING3a||board.getGameState() == GameState.PLAYING3b) {
 			System.out.println("Hello From Remove Piece");
 			removePiece();
 			makeMove();

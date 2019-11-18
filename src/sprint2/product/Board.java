@@ -220,6 +220,9 @@ public class Board {
 			if (checkMill(rowSelected, colSelected)) {
 				setGray();
 				currentGameState = GameState.PLAYING3b;
+				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
+					ai.moveDecider();
+				}
 				return;
 			}
 			updateGameState(currentTurn);
