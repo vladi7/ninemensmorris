@@ -25,19 +25,13 @@ public class TestAvailableMoves {
 		board.makeMoveFirstPhase(7);
 		board.makeMoveSecondPhaseA(13);
 
-			new GUI(board); 
-			try {
-				Thread.sleep(200000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		
 		assertThat(board.getDot(5,3), is(Dot.GRAY));
-		assertThat(board.getDot(4,3), is(Dot.HIGHLIGHT));
-		assertThat(board.getDot(6,3), is(Dot.HIGHLIGHT));
+		assertThat(board.getDot(4,3), is(Dot.HIGHLIGHTWHITE));
+		assertThat(board.getDot(6,3), is(Dot.HIGHLIGHTWHITE));
 		assertThat(board.getDot(5,1), is(Dot.BLACK));
-		assertThat(board.getDot(5,5), is(Dot.HIGHLIGHT));
+		assertThat(board.getDot(5,5), is(Dot.HIGHLIGHTWHITE));
 	}
 
 }
