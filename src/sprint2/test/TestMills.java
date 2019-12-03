@@ -9,6 +9,8 @@ import org.junit.Test;
 import sprint2.product.Board;
 import sprint2.product.Dot;
 import sprint2.product.GUI;
+import sprint2.product.GameRegime;
+import sprint2.product.GameState;
 
 public class TestMills {
 	private Board board;
@@ -16,6 +18,9 @@ public class TestMills {
 	@Before
 	public void setUp() throws Exception {
 		board = new Board(4);
+		board.setCurrentGameRegime(GameRegime.P1vP2);
+		board.setGameState(GameState.PLAYING1);
+		board.setCurrentTurn(Dot.WHITE);
 	}
 
 	@Test

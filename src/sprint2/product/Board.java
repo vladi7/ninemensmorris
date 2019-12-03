@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  *
  */
 public class Board {
-	static final int SIZE = 7;
+	public static final int SIZE = 7;
 	Dot currentTurn;
 	private int numBlackPieces = 4;
 	private int numWhitePieces = 4;
@@ -32,7 +32,7 @@ public class Board {
 
 	private GameState currentGameState;
 
-	Dot[][] grid;
+	public Dot[][] grid;
 
 	/**
 	 * This method is used to create a new grid of size SIZE.
@@ -142,6 +142,7 @@ public class Board {
 			}
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
+			return true;
 		}
 
 		if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {

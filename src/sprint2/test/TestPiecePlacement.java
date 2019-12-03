@@ -9,12 +9,17 @@ import org.junit.Test;
 import sprint2.product.Board;
 import sprint2.product.Dot;
 import sprint2.product.GUI;
+import sprint2.product.GameRegime;
+import sprint2.product.GameState;
 
 public class TestPiecePlacement {
 	private final Board board = new Board(4);
 
 	@Test
 	public void testPiecePlacementPhase1() {
+		board.setCurrentGameRegime(GameRegime.P1vP2);
+		board.setGameState(GameState.PLAYING1);
+		board.setCurrentTurn(Dot.WHITE);
 		board.makeMoveFirstPhase(0);
 		board.makeMoveFirstPhase(1);
 		
@@ -35,6 +40,9 @@ public class TestPiecePlacement {
 	}
 	@Test
 	public void testPieceMovingPhase2() {
+		board.setCurrentGameRegime(GameRegime.P1vP2);
+		board.setGameState(GameState.PLAYING1);
+		board.setCurrentTurn(Dot.WHITE);
 		board.makeMoveFirstPhase(0);
 		board.makeMoveFirstPhase(1);
 		board.makeMoveFirstPhase(2);

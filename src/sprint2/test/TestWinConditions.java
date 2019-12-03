@@ -8,6 +8,7 @@ import org.junit.Test;
 import sprint2.product.Board;
 import sprint2.product.Dot;
 import sprint2.product.GUI;
+import sprint2.product.GameRegime;
 import sprint2.product.GameState;
 
 
@@ -17,6 +18,9 @@ public class TestWinConditions {
 
 	@Test
 	public void testWhiteOpponentBlockedBlackWins() {
+		board.setCurrentGameRegime(GameRegime.P1vP2);
+		board.setGameState(GameState.PLAYING1);
+		board.setCurrentTurn(Dot.WHITE);
 		board.makeMoveFirstPhase(6);
 		board.makeMoveFirstPhase(7);
 		board.makeMoveFirstPhase(8);
@@ -30,6 +34,9 @@ public class TestWinConditions {
 	}
 	@Test
 	public void testBlackOpponentBlockedWhiteWins() {
+		board.setCurrentGameRegime(GameRegime.P1vP2);
+		board.setGameState(GameState.PLAYING1);
+		board.setCurrentTurn(Dot.WHITE);
 		board.makeMoveFirstPhase(7);
 		board.makeMoveFirstPhase(6);
 		board.makeMoveFirstPhase(11);
@@ -39,13 +46,7 @@ public class TestWinConditions {
 		board.makeMoveFirstPhase(13);
 		board.makeMoveFirstPhase(17);
 		
-		new GUI(board); 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		board.makeMoveSecondPhaseA(13);
 		board.makeMoveSecondPhaseB(13, 12);
 		new GUI(board); 
