@@ -69,8 +69,8 @@ public class Board {
 		currentGameState = GameState.START;
 
 		// currentTurn = Dot.WHITE;
-		numBlackPieces = 3;
-		numWhitePieces = 3;
+		numBlackPieces = 4;
+		numWhitePieces = 4;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}

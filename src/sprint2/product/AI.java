@@ -211,7 +211,7 @@ public class AI {
 				if (board.grid[col][row] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
 					int index = board.indexOf(row, col);
 					moveFrom = move;
-					
+					moveTo = index;
 					return true;					
 				}
 			}
@@ -312,8 +312,8 @@ public class AI {
 			}
 		}
 		anyDotHighlightedRandom();
+		
 		System.out.println("random");
-		moveTo = rand.nextInt(24);
 		// boolean status = makeMove();
 		return true;
 
