@@ -296,26 +296,40 @@ public class GUI extends JFrame {
 			g.drawLine(100, 400, 300, 400);
 			g.drawLine(400, 500, 400, 700);
 			g.drawLine(500, 400, 700, 400);
-
+			int i = 0;
 			for (int row = 0; row < board.getTotalRows(); ++row) {
 				for (int col = 0; col < board.getTotalColumns(); ++col) {
+
+					
 					if (board.getDot(row, col) == Dot.EMPTY) {
 						g.setColor(Color.LIGHT_GRAY);
-
+						
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.WHITE) {
 						g.setColor(Color.WHITE);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.BLACK) {
 						g.setColor(Color.BLACK);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.GRAY && (board.getGameState() == GameState.PLAYING2b1
 							|| board.getGameState() == GameState.PLAYING2a
@@ -325,6 +339,10 @@ public class GUI extends JFrame {
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 15,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 15, 40, 40);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.WHITEMILL) {
 						g.setColor(Color.WHITE);
@@ -335,6 +353,10 @@ public class GUI extends JFrame {
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.BLACKMILL) {
 						g.setColor(Color.BLACK);
@@ -345,12 +367,20 @@ public class GUI extends JFrame {
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 					if (board.getDot(row, col) == Dot.HIGHLIGHTWHITE||board.getDot(row, col) == Dot.HIGHLIGHTBLACK) {
 						g.setColor(Color.ORANGE);
 
 						g.fillOval(CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5,
 								CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5, 20, 20);
+						g.setColor(Color.BLACK);
+
+						g.drawString(Integer.toString(i), CELL_SIZE * (col + 1) - GRID_WIDHT_HALF - 5,CELL_SIZE * (row + 1) - GRID_WIDHT_HALF - 5);
+						i++;
 					}
 				}
 			}

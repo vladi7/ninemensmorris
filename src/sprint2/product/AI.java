@@ -43,7 +43,7 @@ public class AI {
 			;
 			return false;
 		}
-		if (board.getGameState() == GameState.PLAYING3a||board.getGameState() == GameState.PLAYING3b) {
+		if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			boolean status = board.makeMoveThirdPhase(move);
 
 			return status;
@@ -63,7 +63,7 @@ public class AI {
 			choosePieceToMove();
 			makeMove();
 
-		} else if (board.getGameState() == GameState.PLAYING3a||board.getGameState() == GameState.PLAYING3b) {
+		} else if (board.getGameState() == GameState.PLAYING3a || board.getGameState() == GameState.PLAYING3b) {
 			System.out.println("Hello From Remove Piece");
 			removePiece();
 			makeMove();
@@ -80,6 +80,7 @@ public class AI {
 
 		} else {
 			while (true) {
+
 				move = rand.nextInt(24);
 				boolean status = makeMove();
 				if (status)
@@ -95,30 +96,47 @@ public class AI {
 				if ((board.grid[row][col] == Dot.WHITE || board.grid[row][col] == Dot.WHITEMILL)
 						&& board.currentTurn == Dot.WHITE) {
 					move = board.indexOf(col, row);
-					board.highlightValidMoves(row, col);
+					board.highlightValidMoves(col, row);
 					if (anyDotHighlightedFormMill()) {
 						moveFrom = move;
 						board.setGray();
 						board.clearMills();
 						board.checkMillsOnTheBoard();
 						return;
-					}}}}
-			for (int row = 0; row < Board.SIZE; ++row) {
-				for (int col = 0; col < Board.SIZE; ++col) {
-					if ((board.grid[row][col] == Dot.WHITE || board.grid[row][col] == Dot.WHITEMILL)
-							&& board.currentTurn == Dot.WHITE) {
-					 if (anyDotHighlightedBlockTwo()) {
+					}
+				}
+				board.setGray();
+
+			}
+		}
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
+				if ((board.grid[row][col] == Dot.WHITE || board.grid[row][col] == Dot.WHITEMILL)
+						&& board.currentTurn == Dot.WHITE) {
+					move = board.indexOf(col, row);
+
+					board.highlightValidMoves(col, row);
+
+					if (anyDotHighlightedBlockTwo()) {
 						moveFrom = move;
 						board.setGray();
 						board.clearMills();
 						board.checkMillsOnTheBoard();
 						return;
-					}}}}
-			for (int row = 0; row < Board.SIZE; ++row) {
-				for (int col = 0; col < Board.SIZE; ++col) {
-					if ((board.grid[row][col] == Dot.WHITE || board.grid[row][col] == Dot.WHITEMILL)
-							&& board.currentTurn == Dot.WHITE) {
-					 if (anyDotHighlightedFormTwo()) {
+					}
+				}
+				board.setGray();
+
+			}
+		}
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
+				if ((board.grid[row][col] == Dot.WHITE || board.grid[row][col] == Dot.WHITEMILL)
+						&& board.currentTurn == Dot.WHITE) {
+					move = board.indexOf(col, row);
+
+					board.highlightValidMoves(col, row);
+					if (anyDotHighlightedFormTwo()) {
 						moveFrom = move;
 						board.setGray();
 						board.clearMills();
@@ -126,9 +144,13 @@ public class AI {
 						return;
 					}
 
-				}}}
-			for (int row = 0; row < Board.SIZE; ++row) {
-				for (int col = 0; col < Board.SIZE; ++col) {
+				}
+				board.setGray();
+
+			}
+		}
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
 				if ((board.grid[row][col] == Dot.BLACK || board.grid[row][col] == Dot.BLACKMILL)
 						&& board.currentTurn == Dot.BLACK) {
 					move = board.indexOf(col, row);
@@ -139,21 +161,17 @@ public class AI {
 						board.clearMills();
 						board.checkMillsOnTheBoard();
 						return;
-					}}}}
-				for (int row = 0; row < Board.SIZE; ++row) {
-					for (int col = 0; col < Board.SIZE; ++col) {
-					if ((board.grid[row][col] == Dot.BLACK || board.grid[row][col] == Dot.BLACKMILL)
-							&& board.currentTurn == Dot.BLACK) { if (anyDotHighlightedBlockTwo()) {
-						moveFrom = move;
-						board.setGray();
-						board.clearMills();
-						board.checkMillsOnTheBoard();
-						return;
-					}}}}
-				for (int row = 0; row < Board.SIZE; ++row) {
-					for (int col = 0; col < Board.SIZE; ++col) {
-					if ((board.grid[row][col] == Dot.BLACK || board.grid[row][col] == Dot.BLACKMILL)
-							&& board.currentTurn == Dot.BLACK) { if (anyDotHighlightedFormTwo()) {
+					}
+				}
+				board.setGray();
+
+			}
+		}
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
+				if ((board.grid[row][col] == Dot.BLACK || board.grid[row][col] == Dot.BLACKMILL)
+						&& board.currentTurn == Dot.BLACK) {
+					if (anyDotHighlightedBlockTwo()) {
 						moveFrom = move;
 						board.setGray();
 						board.clearMills();
@@ -161,30 +179,63 @@ public class AI {
 						return;
 					}
 				}
-			}}
-				board.updateGameState(board.getCurrentTurn());
+				board.setGray();
 
+			}
 		}
-	
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
+				if ((board.grid[row][col] == Dot.BLACK || board.grid[row][col] == Dot.BLACKMILL)
+						&& board.currentTurn == Dot.BLACK) {
+					if (anyDotHighlightedFormTwo()) {
+						moveFrom = move;
+						board.setGray();
+						board.clearMills();
+						board.checkMillsOnTheBoard();
+						return;
+					}
+				}
+				board.setGray();
+
+			}
+		}
+		board.updateGameState(board.getCurrentTurn());
+
+	}
+
+	private boolean anyDotHighlightedRandom() {
+
+		for (int row = 0; row < Board.SIZE; ++row) {
+			for (int col = 0; col < Board.SIZE; ++col) {
+
+				if (board.grid[col][row] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
+					int index = board.indexOf(row, col);
+					moveFrom = move;
+					
+					return true;					
+				}
+			}
+		}
+		return false;
+	}
 
 	private boolean anyDotHighlightedFormMill() {
 
 		for (int row = 0; row < Board.SIZE; ++row) {
 			for (int col = 0; col < Board.SIZE; ++col) {
 
-				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(col, row);
-					
+				if (board.grid[col][row] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
+					int index = board.indexOf(row, col);
+
 					if (formMillSecondPhase(index)) {
-						
 
 						return true;
 					}
 				}
-				
+
 				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(col, row);
-					System.out.println("Highlighted "+ index);
+					int index = board.indexOf(row, col);
+					System.out.println("Highlighted " + index);
 					System.out.println("=====================================================");
 
 					if (formMillSecondPhase(index)) {
@@ -197,12 +248,14 @@ public class AI {
 				}
 			}
 		}
-		return false;}
+		return false;
+	}
+
 	private boolean anyDotHighlightedBlockTwo() {
 		for (int row = 0; row < Board.SIZE; ++row) {
 			for (int col = 0; col < Board.SIZE; ++col) {
-				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(col, row);
+				if (board.grid[col][row] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
+					int index = board.indexOf(row, col);
 
 					if (blockTwoSecondPhase(index)) {
 						System.out.println("block two");
@@ -213,8 +266,8 @@ public class AI {
 					}
 				}
 				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(col, row);
-					System.out.println("Highlighted "+ index);
+					int index = board.indexOf(row, col);
+					System.out.println("Highlighted " + index);
 					System.out.println("=====================================================");
 
 					if (blockTwoSecondPhase(index)) {
@@ -227,13 +280,15 @@ public class AI {
 				}
 			}
 		}
-		return false;}
+		return false;
+	}
+
 	private boolean anyDotHighlightedFormTwo() {
 		for (int row = 0; row < Board.SIZE; ++row) {
 			for (int col = 0; col < Board.SIZE; ++col) {
-				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(col, row);
-					System.out.println("Highlighted "+ index);
+				if (board.grid[col][row] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
+					int index = board.indexOf(row, col);
+					System.out.println("Highlighted " + index);
 
 					if (formTwoSecondPhase(index)) {
 						System.out.println("form two");
@@ -242,10 +297,10 @@ public class AI {
 					}
 				}
 				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(col, row);
+					int index = board.indexOf(row, col);
 
 					if (formTwoSecondPhase(index)) {
-						System.out.println("Highlighted "+ index);
+						System.out.println("Highlighted " + index);
 						System.out.println("=====================================================");
 						System.out.println("form two");
 						System.out.println("index " + index);
@@ -256,36 +311,12 @@ public class AI {
 				}
 			}
 		}
+		anyDotHighlightedRandom();
 		System.out.println("random");
 		moveTo = rand.nextInt(24);
 		// boolean status = makeMove();
 		return true;
 
-	}
-
-	private boolean routineCheck(int row, int col) {
-
-		int index = board.indexOf(row, col);
-
-		if (formMillSecondPhase(index)) {
-			System.out.println("form mill");
-
-			return true;
-		}
-
-		if (blockTwoSecondPhase(index)) {
-			System.out.println("block two");
-
-			return true;
-		}
-
-		if (formTwoSecondPhase(index)) {
-			System.out.println("form two");
-
-			return true;
-		}
-
-		return false;
 	}
 
 	private void moveThePiece() {
@@ -451,10 +482,10 @@ public class AI {
 													&& board.getDot(colE, rowE) == Dot.WHITEMILL)
 											|| (board.currentTurn == Dot.WHITE
 													&& board.getDot(colE, rowE) == Dot.BLACKMILL)) {
-										//if (!checkedMills.contains(millList))
-											// checkedMills.add(millList);
+										// if (!checkedMills.contains(millList))
+										// checkedMills.add(millList);
 
-											millcheck = false;
+										millcheck = false;
 									}
 								}
 								for (int neighborInMill : millList) {
@@ -469,12 +500,15 @@ public class AI {
 										check = false;
 										break;
 									}
-									if(neighborInMill==move) {
-										System.out.println(neighborInMill+" "+move+" "+dotsList.contains(neighborInMill)+" "+dotsList.contains(move)+" "+millcheck);
+									if (neighborInMill == move) {
+										System.out.println(
+												neighborInMill + " " + move + " " + dotsList.contains(neighborInMill)
+														+ " " + dotsList.contains(move) + " " + millcheck);
 
-										continue;}
+										continue;
+									}
 									if (!dotsList.contains(neighborInMill) && millcheck != false
-											&& !dotsList.contains(move)&&check) {
+											&& !dotsList.contains(move) && check) {
 										moveTo = neighborInMill;
 										System.out.println(moveTo);
 										return true;
@@ -725,12 +759,15 @@ public class AI {
 
 										millcheck = false;
 									}
-									if(neighborInMill==move) {
-										System.out.println(neighborInMill+" "+move+" "+dotsList.contains(neighborInMill)+" "+dotsList.contains(move)+" "+millcheck);
+									if (neighborInMill == move) {
+										System.out.println(
+												neighborInMill + " " + move + " " + dotsList.contains(neighborInMill)
+														+ " " + dotsList.contains(move) + " " + millcheck);
 
-										continue;}
+										continue;
+									}
 								}
-								
+
 								for (int neighborInMill : millList) {
 									if (!dotsList.contains(neighborInMill) && millcheck != false
 											&& !dotsList.contains(move)) {
