@@ -173,8 +173,8 @@ public class AI {
 			for (int col = 0; col < Board.SIZE; ++col) {
 
 				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(row, col);
-
+					int index = board.indexOf(col, row);
+					
 					if (formMillSecondPhase(index)) {
 						
 
@@ -182,8 +182,10 @@ public class AI {
 					}
 				}
 				
-				if (board.grid[row][col] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(row, col);
+				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
+					int index = board.indexOf(col, row);
+					System.out.println("Highlighted "+ index);
+					System.out.println("=====================================================");
 
 					if (formMillSecondPhase(index)) {
 						System.out.println("form mill");
@@ -200,7 +202,7 @@ public class AI {
 		for (int row = 0; row < Board.SIZE; ++row) {
 			for (int col = 0; col < Board.SIZE; ++col) {
 				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(row, col);
+					int index = board.indexOf(col, row);
 
 					if (blockTwoSecondPhase(index)) {
 						System.out.println("block two");
@@ -210,8 +212,10 @@ public class AI {
 						return true;
 					}
 				}
-				if (board.grid[row][col] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(row, col);
+				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
+					int index = board.indexOf(col, row);
+					System.out.println("Highlighted "+ index);
+					System.out.println("=====================================================");
 
 					if (blockTwoSecondPhase(index)) {
 						System.out.println("block two");
@@ -228,7 +232,8 @@ public class AI {
 		for (int row = 0; row < Board.SIZE; ++row) {
 			for (int col = 0; col < Board.SIZE; ++col) {
 				if (board.grid[row][col] == Dot.HIGHLIGHTWHITE && board.currentTurn == Dot.WHITE) {
-					int index = board.indexOf(row, col);
+					int index = board.indexOf(col, row);
+					System.out.println("Highlighted "+ index);
 
 					if (formTwoSecondPhase(index)) {
 						System.out.println("form two");
@@ -236,10 +241,12 @@ public class AI {
 						return true;
 					}
 				}
-				if (board.grid[row][col] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
-					int index = board.indexOf(row, col);
+				if (board.grid[col][row] == Dot.HIGHLIGHTBLACK && board.currentTurn == Dot.BLACK) {
+					int index = board.indexOf(col, row);
 
 					if (formTwoSecondPhase(index)) {
+						System.out.println("Highlighted "+ index);
+						System.out.println("=====================================================");
 						System.out.println("form two");
 						System.out.println("index " + index);
 						System.out.println("move " + move);
