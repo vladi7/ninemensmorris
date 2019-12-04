@@ -40,7 +40,7 @@ public class AI {
 		if (board.getGameState() == GameState.PLAYING2b1) {
 
 			board.makeMoveSecondPhaseB(moveFrom, moveTo);
-			board.clearMills();
+			//board.clearMills();
 			
 			return false;
 		}
@@ -100,8 +100,9 @@ public class AI {
 					if (anyDotHighlightedFormMill()) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+					//	board.clearMills();
+
 						return;
 					}
 				}
@@ -118,8 +119,9 @@ public class AI {
 					if (anyDotHighlightedFormMill()&& moveTo!=25) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
+
 						return;
 					}
 				}
@@ -138,8 +140,8 @@ public class AI {
 					if (anyDotHighlightedBlockTwo()) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
 						return;
 					}
 				}
@@ -157,8 +159,9 @@ public class AI {
 					if (anyDotHighlightedBlockTwo()&& moveTo!=25) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
+
 						return;
 					}
 				}
@@ -176,8 +179,9 @@ public class AI {
 					if (anyDotHighlightedFormTwo()) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
+
 						return;
 					}
 
@@ -196,8 +200,9 @@ public class AI {
 					if (anyDotHighlightedFormTwo()&& moveTo!=25) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
+
 						return;
 					}
 				}
@@ -216,8 +221,8 @@ public class AI {
 					if (anyDotHighlightedRandom()) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
 
 						return;
 					}
@@ -236,8 +241,8 @@ public class AI {
 					if (anyDotHighlightedRandom()&& moveTo!=25) {
 						moveFrom = move;
 						board.setGray();
-						board.clearMills();
 						board.checkMillsOnTheBoard();
+						//board.clearMills();
 
 						return;
 					}

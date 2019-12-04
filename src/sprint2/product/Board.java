@@ -69,8 +69,8 @@ public class Board {
 		currentGameState = GameState.START;
 
 		// currentTurn = Dot.WHITE;
-		numBlackPieces = 4;
-		numWhitePieces = 4;
+		numBlackPieces = 8;
+		numWhitePieces = 8;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
@@ -223,6 +223,8 @@ public class Board {
 				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
 					ai.moveDecider();
 				}
+				updateGameState(currentTurn);
+
 				return;
 			}
 			updateGameState(currentTurn);
@@ -380,7 +382,6 @@ public class Board {
 	public void updateGameState(Dot turn) {
 		if (hasWon()) { // check for win
 			currentGameState = (turn == Dot.WHITE) ? GameState.WHITE_WON : GameState.BLACK_WON;
-			clearMills();
 
 		} /*else if (isDraw()) {
 			currentGameState = GameState.DRAW;
@@ -388,6 +389,8 @@ public class Board {
 
 		}*/
 		// clearMills();
+		clearMills();
+
 		setGray();
 	}
 
@@ -595,7 +598,9 @@ public class Board {
 	 * This method clears the mills on the board which are not mills anymore.
 	 */
 	void clearMills() {
-		int[] mills = new int[24];
+		int[] millsWhite = new int[24];
+		int[] millsBlack = new int[24];
+
 		for (int[] mill : millsArray) {
 			List<Integer> millList = Arrays.stream(mill).boxed().collect(Collectors.toList());
 			int i = 0;
@@ -625,19 +630,19 @@ public class Board {
 			}
 			if (i == 3) {
 				for (int neighbor : millList) {
-					mills[neighbor] = 1;
+					millsBlack[neighbor] = 1;
 				}
 			}
 			if (j == 3) {
 				for (int neighbor : millList) {
-					mills[neighbor] = 1;
+					millsWhite[neighbor] = 1;
 				}
 			}
 			if (i < 3) {
 				for (int neighbor : millList) {
 					int row = positionOfCells[neighbor][0];
 					int col = positionOfCells[neighbor][1];
-					if (grid[col][row] == Dot.BLACKMILL && mills[neighbor] == 0) {
+					if (grid[col][row] == Dot.BLACKMILL && millsBlack[neighbor] == 0) {
 						grid[col][row] = Dot.BLACK;
 					}
 				}
@@ -646,7 +651,7 @@ public class Board {
 				for (int neighbor : millList) {
 					int row = positionOfCells[neighbor][0];
 					int col = positionOfCells[neighbor][1];
-					if (grid[col][row] == Dot.WHITEMILL && mills[neighbor] == 0) {
+					if (grid[col][row] == Dot.WHITEMILL && millsWhite[neighbor] == 0) {
 						grid[col][row] = Dot.WHITE;
 					}
 				}
