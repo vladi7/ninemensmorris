@@ -102,6 +102,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 					//	board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -121,6 +122,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -142,6 +144,8 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
+
 						return;
 					}
 				}
@@ -161,6 +165,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -181,6 +186,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -202,6 +208,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -223,6 +230,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
+						board.updateGameState(board.getCurrentTurn());
 
 						return;
 					}
@@ -243,7 +251,7 @@ public class AI {
 						board.setGray();
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
-
+						board.updateGameState(board.getCurrentTurn());
 						return;
 					}
 				}
@@ -253,7 +261,7 @@ public class AI {
 			
 		}
 
-		board.updateGameState(board.getCurrentTurn());
+		
 
 	}
 

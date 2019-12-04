@@ -69,8 +69,8 @@ public class Board {
 		currentGameState = GameState.START;
 
 		// currentTurn = Dot.WHITE;
-		numBlackPieces = 8;
-		numWhitePieces = 8;
+		numBlackPieces = 4;
+		numWhitePieces = 4;
 		numWhitePiecesPhase2 = 0;
 		numBlackPiecesPhase2 = 0;
 	}
@@ -147,6 +147,8 @@ public class Board {
 		if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
 
 			ai.moveDecider();
+			updateGameState(currentTurn);
+
 		}
 		return true;
 
@@ -223,11 +225,11 @@ public class Board {
 				if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
 					ai.moveDecider();
 				}
-				updateGameState(currentTurn);
+				//updateGameState(currentTurn);
 
 				return;
 			}
-			updateGameState(currentTurn);
+			//updateGameState(currentTurn);
 
 			currentTurn = (currentTurn == Dot.WHITE) ? Dot.BLACK : Dot.WHITE;
 			if (getCurrentGameRegime() == GameRegime.PvsAI && getCurrentTurn() == getAiPlayer()) {
