@@ -61,6 +61,7 @@ public class AI {
 			makeMove();
 			moveFrom = 25;
 			moveTo = 25;
+			board.setGray();
 
 		} else if (board.getGameState() == GameState.PLAYING2a) {
 			choosePieceToMove();
@@ -103,7 +104,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 					//	board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
-
+						board.setGray();
 						return;
 					}
 				}
@@ -123,6 +124,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -145,6 +147,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -166,6 +169,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -187,6 +191,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -209,6 +214,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -231,6 +237,7 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
 
 						return;
 					}
@@ -252,6 +259,8 @@ public class AI {
 						board.checkMillsOnTheBoard();
 						//board.clearMills();
 						board.updateGameState(board.getCurrentTurn());
+						board.setGray();
+
 						return;
 					}
 				}
